@@ -1,8 +1,9 @@
+import Login from "./components/Admin/Login";
 
 function App() {
   return (
     <div className="App">
-      <p className="">Hello</p>
+      <Login/>
     </div>
   );
 }

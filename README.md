@@ -5,4 +5,4 @@ FrontEnd Design for a GYM Application.
 # Features
 
 - Admin Login
-  --Login form for Admin
+  - Login form for Admin
