@@ -1,11 +1,14 @@
-import Login from "./components/Admin/Login";
+import { Container } from "./components/Container";
+
 
 function App() {
   return (
     <div className="App">
-      <Login/>
+      <Container/>
     </div>
   );
+
+
 }
 
 export default App;
