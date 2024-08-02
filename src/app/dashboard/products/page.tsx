@@ -1,7 +1,6 @@
 "use client";
 
 import ProductForm from "@/components/form/ProductForm";
-import TestForm from "@/components/form/TestForm";
 import ProductTable from "@/components/ProductTable";
 import Spinner from "@/components/ui/spinner";
 import { createProductSchema } from "@/types/z.schema.types";
@@ -9,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { RiAddLargeFill } from "react-icons/ri";
-import emailjs from "@emailjs/browser";
 
 async function getProductDetails(): Promise<(typeof createProductSchema)[]> {
   const data = await fetch("http://localhost:2000/products");
