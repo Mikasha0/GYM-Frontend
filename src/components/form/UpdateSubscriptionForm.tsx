@@ -152,7 +152,7 @@ export default function UpdateSubscriptionForm({
                   display ? "" : "border-none"
                 }`}
                 name="paymentStatus"
-                options={["Settled", "Pending"]}
+                options={["Settled", "Pending", "Overdue"]}
                 enable={enableInput}
               />
             </div>

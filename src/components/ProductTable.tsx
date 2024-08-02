@@ -321,7 +321,7 @@ export default function ProductTable({
           ))}
         </tbody>
       </table>
-      <Pagination paginationData={products} page={page} setPage={setPage} />
+      <Pagination paginationData={products} page={page} setPage={setPage} perPageItems={8} />
     </form>
   );
 }

@@ -1,6 +1,7 @@
 import { UserData } from "@/types/userdata.type";
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import Pagination from "./ui/pagination";
 
 export default function MoreMembersCard({
   member,
@@ -11,6 +12,7 @@ export default function MoreMembersCard({
   setShowMembers: Dispatch<SetStateAction<boolean>>;
   showMembers: boolean;
 }) {
+  const [page, setPage] = useState(1);
   const handleClose = () => {
     setShowMembers(!showMembers);
   };
@@ -23,7 +25,7 @@ export default function MoreMembersCard({
         </button>
       </div>
       <div className="flex flex-col mb-4">
-        {member.map((members: UserData) => (
+        {member.slice(page * 4 - 4, page * 4).map((members: UserData) => (
           <ul key={members.id} className="flex flex-col">
             <div className="flex">
               <Image
@@ -40,6 +42,7 @@ export default function MoreMembersCard({
           </ul>
         ))}
       </div>
+        <Pagination paginationData={member} page={page} setPage={setPage} perPageItems={4}/>
     </div>
   );
 }

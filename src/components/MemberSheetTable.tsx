@@ -234,7 +234,7 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
             ))}
           </tbody>
         </table>
-        <Pagination paginationData={members} page={page} setPage={setPage} />
+        <Pagination paginationData={members} page={page} setPage={setPage} perPageItems={8} />
       </form>
     </>
   );

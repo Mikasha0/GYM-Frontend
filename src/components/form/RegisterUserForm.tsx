@@ -305,7 +305,7 @@ export default function RegisterUserForm() {
                   errors={errors}
                   register={register}
                   name="paymentStatus"
-                  options={["Pending", "Settled"]}
+                  options={["Pending", "Settled", "Overdue"]}
                 />
               </div>
               <button

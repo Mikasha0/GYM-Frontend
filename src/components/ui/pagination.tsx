@@ -5,12 +5,14 @@ export default function Pagination({
   paginationData,
   page,
   setPage,
+  perPageItems
 }: {
   paginationData: any;
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
+  perPageItems:number;
 }) {
-  const itemsPerPage = 8;
+  const itemsPerPage = perPageItems;
   const totalPages = Math.ceil(paginationData.length / itemsPerPage);
 
   const selectPageHandler = (selectedPage: number) => {

@@ -19,7 +19,7 @@ const validateDateOfBirth = (date: Date) => {
 export const gender = ["Male", "Female", "Other"];
 export const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 export const subscription = ["1 Month", "2 Month", "3 Month"];
-export const paymentStatus = ["Pending", "Settled"];
+export const paymentStatus = ["Pending", "Settled", "Overdue"];
 export const new_gender = ["Inclusive", "Male", "Female", "Other"];
 export const convertToEnum = (data: string[], name: string) => {
   if (data.length === 0) {
