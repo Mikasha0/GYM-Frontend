@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import JoinedMembers from "./joinedMembers";
 
 export default function ChallengeDetailsCard({ challenge }: any) {
   const [present, setPresent] = useState(false);

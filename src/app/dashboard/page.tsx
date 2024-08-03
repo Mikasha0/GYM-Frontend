@@ -55,7 +55,7 @@ export default function Dashboard() {
   const displayedMembers = value ? handleSearch() : members;
 
   return (
-    <div className="w-full bg-gray-100 p-5 h-full">
+    <div className="w-full bg-gray-100 p-5">
       <div className="w-full bg-white p-3 rounded-lg shadow-lg ">
         <div className="w-full bg-white rounded-lg flex-shrink-0 sticky top-0 z-10">
           <div className="flex justify-between">

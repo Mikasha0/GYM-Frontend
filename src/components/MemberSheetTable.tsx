@@ -1,14 +1,12 @@
 import { UserData } from "@/types/userdata.type";
-import {
-  createUserEmailSchema
-} from "@/types/z.schema.types";
+import { createUserEmailSchema } from "@/types/z.schema.types";
 import emailjs from "@emailjs/browser";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { differenceInDays } from "date-fns";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineMail } from "react-icons/ai";
 import { z } from "zod";
+import { SubscriptionExpiryRow } from "./SubscriptionExpiryRow";
 import InputForm from "./ui/inputForm";
 import Pagination from "./ui/pagination";
 import TextareaForm from "./ui/textareaForm";
@@ -29,13 +27,6 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
     resolver: zodResolver(createUserEmailSchema),
     mode: "onChange",
   });
-  const findPassedDate = (joindate: any) => {
-    const curr_date = new Date();
-    const join_date = new Date(joindate);
-    return differenceInDays(curr_date, join_date);
-  };
-
-  // members.map((member) => console.log(findPassedDate(member.joindate)));
 
   const openEmailForm = (member: any) => {
     setEditChallengeId(member.id);
@@ -102,42 +93,59 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
               >
                 <th
                   scope="row"
-                  className="px-6 py-4 text-xs   text-black whitespace-nowrap font-normal"
+                  className={`px-6 py-4 text-xs   text-black whitespace-nowrap font-normal ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
                 >
                   {member.id}
                 </th>
-                <td className="px-5 py-4 text-xs font-normal text-black">
-                  {member.firstname} {member.lastname}
+                <td
+                  className={`px-5 py-4 text-xs font-normal text-black ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
+                >
+                  {member.firstname} {member?.middlename} {member.lastname}
                 </td>
-                <td className="px-5 py-4 text-xs font-normal text-black">
+                <td
+                  className={`px-5 py-4 text-xs font-normal text-black ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
+                >
                   {member.phone}
                 </td>
-                <td className="px-5 py-4 text-xs font-normal text-black">
+                <td
+                  className={`px-5 py-4 text-xs font-normal text-black ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
+                >
                   {member.email}
                 </td>
-                <td className="px-5 py-4 text-xs font-normal text-white">
+                <td
+                  className={`px-5 py-4 text-xs font-normal text-white ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
+                >
                   <p
                     className={`w-full px-4 py-[3px] rounded-sm text-white ${
                       member.paymentStatus === "Pending"
                         ? "bg-[#FEB621]"
-                        : "bg-[#15C3FF]"
+                        : member.paymentStatus === "Settled"
+                        ? "bg-[#15C3FF]"
+                        : member.paymentStatus === "Overdue"
+                        ? "bg-[#FC4B67]"
+                        : ""
                     }`}
                   >
                     {member.paymentStatus}
                   </p>
                 </td>
 
-                <td className="px-5 py-4 text-xs font-normal text-black text-center">
-                  {member.enddate == "3 Month"
-                    ? 90 - findPassedDate(member.joindate)
-                    : member.enddate == "2 Month"
-                    ? 60 - findPassedDate(member.joindate)
-                    : member.enddate == "1 Month"
-                    ? 30 - findPassedDate(member.joindate)
-                    : null}
-                </td>
+                <SubscriptionExpiryRow member={member} />
+
                 <td
-                  className="px-5 py-4 text-xs font-normal text-black"
+                  className={`px-5 py-4 text-xs font-normal text-black ${
+                    member.paymentStatus == "Overdue" ? "text-red-400" : ""
+                  }`}
                   onClick={() => openEmailForm(member)}
                 >
                   <AiOutlineMail size={18} />
@@ -234,7 +242,12 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
             ))}
           </tbody>
         </table>
-        <Pagination paginationData={members} page={page} setPage={setPage} perPageItems={8} />
+        <Pagination
+          paginationData={members}
+          page={page}
+          setPage={setPage}
+          perPageItems={8}
+        />
       </form>
     </>
   );

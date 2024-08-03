@@ -1,5 +1,5 @@
 "use client";
-import ChallengeDetailsCard from "@/components/challengeDetailsCard";
+import ChallengeDetailsCard from "@/components/ChallengeDetailsCard";
 import ChallengesForm from "@/components/form/ChallengesForm";
 import Spinner from "@/components/ui/spinner";
 import { createChallengesSchema } from "@/types/z.schema.types";
