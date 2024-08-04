@@ -13,6 +13,7 @@ export const steps = [
         "dateOfBirth",
         "gender",
         "address",
+        "designation",
         "emergencyContactNumber",
         "emergencyContactName",
       ],

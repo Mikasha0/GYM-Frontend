@@ -21,6 +21,7 @@ export const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 export const subscription = ["1 Month", "2 Month", "3 Month"];
 export const paymentStatus = ["Pending", "Settled", "Overdue"];
 export const new_gender = ["Inclusive", "Male", "Female", "Other"];
+export const designation = ["Member", "Non-Member"];
 export const convertToEnum = (data: string[], name: string) => {
   if (data.length === 0) {
     throw new Error("Array cannot be empty");
@@ -97,6 +98,7 @@ export const createUserSchema = z.object({
   address: z
     .string()
     .min(2, { message: "Address must be at least 2 characters." }),
+  designation: convertToEnum(designation, "designation"),
   emergencyContactNumber: z
     .string()
     .regex(/^9\d{9}$/, {
@@ -144,9 +146,9 @@ export const updateUserDetailsSchema = z.object({
     .min(2, { message: "First name must be at least 2 characters." }),
   middlename: z
     .string()
-    .min(2, { message: "Middle name must be at least 2 characters." })
-    .optional()
-    .nullable(),
+    // .min(2, { message: "Middle name must be at least 2 characters." })
+    .nullable()
+    .optional(),
   lastname: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters." }),
@@ -158,15 +160,22 @@ export const updateUserDetailsSchema = z.object({
   address: z
     .string()
     .min(2, { message: "Address must be at least 2 characters." }),
-  emergencyContactNumber: z.string().regex(/^9\d{9}$/, {
-    message:
-      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
-  }),
+  emergencyContactNumber: z
+    .string()
+    .regex(/^9\d{9}$/, {
+      message:
+        "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+    })
+    .optional()
+    .or(z.literal("")),
   emergencyContactName: z
     .string()
-    .min(2, { message: "Contact name must be at least 2 characters." }),
+    .min(2, { message: "Contact name must be at least 2 characters." })
+    .optional()
+    .or(z.literal("")),
   dateOfBirth: dateOfBirthSchema,
   gender: convertToEnum(gender, "gender"),
+  designation: convertToEnum(designation, "designation"),
 });
 
 export const updateBodyMetricsSchema = z.object({
@@ -223,11 +232,14 @@ export const editProductSchema = z.object({
   price: z.number().positive("Price must be a positive number"),
   quantity: z.number().nonnegative("Quantity must be non-negative"),
   profile: z
-  .custom<FileList>((files) => files instanceof FileList && files.length >= 0, {
-    message: "Profile must be a non-empty FileList",
-  })
-  .optional()
-  .nullable()
+    .custom<FileList>(
+      (files) => files instanceof FileList && files.length >= 0,
+      {
+        message: "Profile must be a non-empty FileList",
+      }
+    )
+    .optional()
+    .nullable(),
 });
 
 export const createChallengesSchema = z.object({
@@ -248,7 +260,6 @@ export const createUserEmailSchema = z.object({
   lastname: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters." }),
-    email: z.string().email({ message: "Invalid email address." }),
-    message: z.string().min(1, "Email Message is required"),
-
+  email: z.string().email({ message: "Invalid email address." }),
+  message: z.string().min(1, "Email Message is required"),
 });

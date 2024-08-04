@@ -4,14 +4,14 @@ import { steps } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { AvatarGenerator } from "random-avatar-generator";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import FormSteps from "../ui/formSteps";
 import InputForm from "../ui/inputForm";
-import SelectInput from "../ui/selectInput";
-import { AvatarGenerator } from "random-avatar-generator";
 import Loading from "../ui/loading";
+import SelectInput from "../ui/selectInput";
 
 export default function RegisterUserForm() {
   const [previousStep, setPreviousStep] = useState(0);
@@ -167,6 +167,14 @@ export default function RegisterUserForm() {
                   register={register}
                   name="address"
                   errors={errors}
+                  required={true}
+                />
+                 <SelectInput
+                  labelName="Designation"
+                  errors={errors}
+                  register={register}
+                  name="designation"
+                  options={["Member","Non-Member"]}
                   required={true}
                 />
               </div>

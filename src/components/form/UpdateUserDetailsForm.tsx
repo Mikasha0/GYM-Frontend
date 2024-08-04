@@ -33,18 +33,21 @@ export default function UpdateUserDetailsForm({
   } = useForm<z.infer<typeof updateUserDetailsSchema>>({
     resolver: zodResolver(updateUserDetailsSchema),
     mode: "onChange",
-    defaultValues:{
-      firstname:memberDetails.firstname,
-      middlename:memberDetails?.middlename,
-      lastname:memberDetails.lastname,
-      email:memberDetails.email,
-      phone:memberDetails.phone,
-      address:memberDetails.address,
-      gender:memberDetails.gender,
-      dateOfBirth: new Date(memberDetails?.dateOfBirth).toISOString().split("T")[0]  ,
-      emergencyContactName:memberDetails.emergencyContactName,
-      emergencyContactNumber:memberDetails.emergencyContactNumber
-    }
+    defaultValues: {
+      firstname: memberDetails.firstname,
+      middlename: memberDetails?.middlename,
+      lastname: memberDetails.lastname,
+      email: memberDetails.email,
+      phone: memberDetails.phone,
+      address: memberDetails.address,
+      gender: memberDetails.gender,
+      designation:memberDetails.designation,
+      dateOfBirth: new Date(memberDetails?.dateOfBirth)
+        .toISOString()
+        .split("T")[0],
+      emergencyContactName: memberDetails.emergencyContactName,
+      emergencyContactNumber: memberDetails.emergencyContactNumber,
+    },
   });
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof updateUserDetailsSchema>) => {
@@ -92,7 +95,7 @@ export default function UpdateUserDetailsForm({
   };
   const handleClick = () => {
     setShowIndex();
-    reset()
+    reset();
   };
   return (
     <form onSubmit={handleSubmit((data) => mutation.mutate(data))}>
@@ -191,6 +194,18 @@ export default function UpdateUserDetailsForm({
                 }`}
                 name="gender"
                 options={["Male", "Female", "Other"]}
+                enable={enableInput}
+              />
+              <SelectInput
+                labelName="Designation"
+                errors={errors}
+                register={register}
+                labelClassName="text-gray-400 font-light ml-[10px]"
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
+                name="designation"
+                options={["Member", "Non-Member"]}
                 enable={enableInput}
               />
               <InputForm
