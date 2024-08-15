@@ -1,12 +1,7 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": "next",
   "rules": {
-    "rule-name": "off",
-    "another-rule-name": "off",
-    "react/react-in-jsx-scope": "off",
-    "no-unused-vars": "warn",
-    "no-console": "warn",
-    "react/prop-types": "off",
-    "import/no-anonymous-default-export": "off"
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off"
   }
 }

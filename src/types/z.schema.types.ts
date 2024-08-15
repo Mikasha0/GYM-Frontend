@@ -19,8 +19,11 @@ const validateDateOfBirth = (date: Date) => {
 export const gender = ["Male", "Female", "Other"];
 export const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 export const subscription = ["1 Month", "2 Month", "3 Month"];
-export const paymentStatus = ["Pending", "Settled"];
+export const paymentStatus = ["Pending", "Settled", "Overdue"];
 export const new_gender = ["Inclusive", "Male", "Female", "Other"];
+export const designation = ["Member", "Trial-Member"];
+export const category = ["Gym", "Cardio", "Gym + Cardio"];
+export const paymentMethod = ["Cash", "Esewa", "Khalti"];
 export const convertToEnum = (data: string[], name: string) => {
   if (data.length === 0) {
     throw new Error("Array cannot be empty");
@@ -77,66 +80,76 @@ const dateOfBirthSchema = z.preprocess(
     })
     .transform((date) => date.toISOString().split("T")[0])
 );
-export const createUserSchema = z.object({
-  firstname: z
-    .string()
-    .min(2, { message: "First name must be at least 2 characters." }),
-  middlename: z
-    .string()
-    // .min(2, { message: "Middle name must be at least 2 characters." })
-    .nullable()
-    .optional(),
-  lastname: z
-    .string()
-    .min(2, { message: "Last name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  phone: z.string().regex(/^9\d{9}$/, {
-    message:
-      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
-  }),
-  address: z
-    .string()
-    .min(2, { message: "Address must be at least 2 characters." }),
-  emergencyContactNumber: z
-    .string()
-    .regex(/^9\d{9}$/, {
+export const createUserSchema = z
+  .object({
+    firstname: z
+      .string()
+      .min(2, { message: "First name must be at least 2 characters." }),
+    middlename: z
+      .string()
+      // .min(2, { message: "Middle name must be at least 2 characters." })
+      .nullable()
+      .optional(),
+    lastname: z
+      .string()
+      .min(2, { message: "Last name must be at least 2 characters." }),
+    email: z.string().email({ message: "Invalid email address." }),
+    phone: z.string().regex(/^9\d{9}$/, {
       message:
         "Phone number must be a valid 10-digit Nepalese number starting with 9.",
-    })
-    .optional()
-    .or(z.literal("")),
-  emergencyContactName: z
-    .string()
-    .min(2, { message: "Contact name must be at least 2 characters." })
-    .optional()
-    .or(z.literal("")),
-  dateOfBirth: dateOfBirthSchema,
-  gender: convertToEnum(gender, "gender"),
-  joindate: convertDateToStr("Join date"),
-  enddate: convertToEnum(subscription, "Subscription"),
-  height: z.number().min(0, { message: "Height must be a positive number." }),
-  weight: z.number().min(0, { message: "Weight must be a positive number." }),
-  hips: z.number().min(0, { message: "Hips must be a positive number." }),
-  chest: z.number().min(0, { message: "Chest must be a positive number." }),
-  waist: z.number().min(0, { message: "Waist must be a positive number." }),
-  thigh: z.number().min(0, { message: "Thigh must be a positive number." }),
-  allergies: z
-    .string()
-    .min(2, { message: "Allergies must be at least 2 characters." })
-    .optional()
-    .or(z.literal("")),
-  medicalCondition: z
-    .string()
-    .min(2, { message: "Medical Condition must be at least 2 characters." })
-    .optional()
-    .or(z.literal("")),
-  bloodGroup: convertToEnum(bloodGroup, "Blood group"),
-  paymentStatus: convertToEnum(paymentStatus, "Payment status"),
-});
-// .refine((data) => data.enddate > data.joindate, {
-//   message: "End date must be after join date.",
-//   path: ["enddate"],
-// });
+    }),
+    address: z
+      .string()
+      .min(2, { message: "Address must be at least 2 characters." }),
+    emergencyContactNumber: z
+      .string()
+      .regex(/^9\d{9}$/, {
+        message:
+          "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+      })
+      .optional()
+      .or(z.literal("")),
+    emergencyContactName: z
+      .string()
+      .min(2, { message: "Contact name must be at least 2 characters." })
+      .optional()
+      .or(z.literal("")),
+    dateOfBirth: dateOfBirthSchema,
+    gender: convertToEnum(gender, "gender"),
+    designation: convertToEnum(designation, "designation"),
+    joindate: convertDateToStr("Join date"),
+    end_date: convertDateToStr("End date").optional(),
+    enddate: convertToEnum(subscription, "Subscription").optional(),
+    height: z.number().min(0, { message: "Height must be a positive number." }),
+    weight: z.number().min(0, { message: "Weight must be a positive number." }),
+    hips: z.number().min(0, { message: "Hips must be a positive number." }),
+    chest: z.number().min(0, { message: "Chest must be a positive number." }),
+    waist: z.number().min(0, { message: "Waist must be a positive number." }),
+    thigh: z.number().min(0, { message: "Thigh must be a positive number." }),
+    allergies: z
+      .string()
+      .min(2, { message: "Allergies must be at least 2 characters." })
+      .optional()
+      .or(z.literal("")),
+    medicalCondition: z
+      .string()
+      .min(2, { message: "Medical Condition must be at least 2 characters." })
+      .optional()
+      .or(z.literal("")),
+    bloodGroup: convertToEnum(bloodGroup, "Blood group"),
+    paymentStatus: convertToEnum(paymentStatus, "Payment status"),
+    category: convertToEnum(category, "Category"),
+    paymentMethod: convertToEnum(paymentMethod, "Payment Method"),
+  })
+  .refine(
+    (data) =>
+      data.designation === "Trial-Member" ? data.end_date : data.enddate,
+    {
+      message:
+        "Either subscription or end date must be provided based on the designation.",
+      path: ["enddate", "subscription"],
+    }
+  );
 
 export const updateUserDetailsSchema = z.object({
   firstname: z
@@ -167,6 +180,7 @@ export const updateUserDetailsSchema = z.object({
     .min(2, { message: "Contact name must be at least 2 characters." }),
   dateOfBirth: dateOfBirthSchema,
   gender: convertToEnum(gender, "gender"),
+  designation: convertToEnum(designation, "designation"),
 });
 
 export const updateBodyMetricsSchema = z.object({
@@ -187,10 +201,13 @@ export const updateBodyMetricsSchema = z.object({
 
 export const updateSubscriptionSchema = z.object({
   joindate: convertDateToStr("Join date"),
-  enddate: convertToEnum(subscription, "Subscription"),
+  enddate: convertToEnum(subscription, "Subscription").optional(),
   paymentStatus: convertToEnum(paymentStatus, "Payment status"),
+  end_date: convertDateToStr("End date").optional(),
+  category: convertToEnum(category, "Category"),
+  paymentMethod: convertToEnum(paymentMethod, "Payment Method"),
 });
-// .refine((data) => data.enddate > data.joindate, {
+// .refine((data) => data.enddate > data.joindate,
 //   message: "End date must be after join date.",
 //   path: ["enddate"],
 // });
@@ -223,11 +240,14 @@ export const editProductSchema = z.object({
   price: z.number().positive("Price must be a positive number"),
   quantity: z.number().nonnegative("Quantity must be non-negative"),
   profile: z
-  .custom<FileList>((files) => files instanceof FileList && files.length >= 0, {
-    message: "Profile must be a non-empty FileList",
-  })
-  .optional()
-  .nullable()
+    .custom<FileList>(
+      (files) => files instanceof FileList && files.length >= 0,
+      {
+        message: "Profile must be a non-empty FileList",
+      }
+    )
+    .optional()
+    .nullable(),
 });
 
 export const createChallengesSchema = z.object({
@@ -248,7 +268,6 @@ export const createUserEmailSchema = z.object({
   lastname: z
     .string()
     .min(2, { message: "Last name must be at least 2 characters." }),
-    email: z.string().email({ message: "Invalid email address." }),
-    message: z.string().min(1, "Email Message is required"),
-
+  email: z.string().email({ message: "Invalid email address." }),
+  message: z.string().min(1, "Email Message is required"),
 });

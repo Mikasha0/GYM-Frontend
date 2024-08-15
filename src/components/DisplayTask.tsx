@@ -12,13 +12,13 @@ export interface Task {
 }
 
 const fetchTaskData = async () => {
-  const response = await fetch("http://localhost:2000/task");
+  const response = await fetch("https://haster-gym-server.onrender.com/task");
   const data = await response.json();
   return data;
 };
 
 const deleteTask = async (taskId: string) => {
-  const response = await fetch(`http://localhost:2000/task/${taskId}`, {
+  const response = await fetch(`https://haster-gym-server.onrender.com/task/${taskId}`, {
     method: "DELETE",
   });
 

@@ -4,22 +4,46 @@ import { steps } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { AvatarGenerator } from "random-avatar-generator";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaCheck } from "react-icons/fa6";
+import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
+import AddOns, { addOnsPrice } from "../AddOns";
 import FormSteps from "../ui/formSteps";
 import InputForm from "../ui/inputForm";
-import SelectInput from "../ui/selectInput";
-import { AvatarGenerator } from "random-avatar-generator";
 import Loading from "../ui/loading";
+import SelectInput from "../ui/selectInput";
+
+export const Pricing: { [key: string]: number } = {
+  Gym: 1000,
+  Cardio: 800,
+  "Gym + Cardio": 1500,
+};
+
+export const Subscription: { [key: string]: number } = {
+  "1 Month": 1,
+  "2 Month": 2,
+  "3 Month": 3,
+};
 
 export default function RegisterUserForm() {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [designation, setDesignation] = useState<string>("Member");
+  const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [category, setCategory] = useState("Gym");
+  const [subscription, setSubscription] = useState("1 Month");
   const [users, setUsers] = useState<(typeof createUserSchema)[]>([]);
   const delta = currentStep - previousStep;
   const generator = new AvatarGenerator();
   const ramdom_avatar = generator.generateRandomAvatar();
+  console.log(designation)
+  const AddOn = selectedAddOns.reduce(
+    (total, addOn) => total + addOnsPrice[addOn],
+    0
+  );
 
   const router = useRouter();
 
@@ -33,16 +57,27 @@ export default function RegisterUserForm() {
     mode: "onChange",
   });
 
+  const handleAddOnClick = (value: string) => {
+    setSelectedAddOns((addons) =>
+      addons.includes(value)
+        ? addons.filter((addOn) => addOn !== value)
+        : [...addons, value]
+    );
+  };
+
   const registerUser = async (data: z.infer<typeof createUserSchema>) => {
+    console.log(data);
     const registerUserData = {
       ...data,
+      addOns: selectedAddOns,
+      id: uuidv4(),
       streak: 0,
       lastattendance: null,
       profile: ramdom_avatar,
     };
 
     try {
-      const response = await fetch("http://localhost:2000/users", {
+      const response = await fetch("https://haster-gym-server.onrender.com/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +88,6 @@ export default function RegisterUserForm() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-
       const result = await response.json();
       setUsers((prevUsers) => [...prevUsers, result]);
       router.push("/dashboard/members");
@@ -86,6 +120,9 @@ export default function RegisterUserForm() {
     }
   };
 
+  const categoryTimesSubscription =
+    Pricing[category] * Subscription[subscription];
+
   return (
     <>
       <FormSteps currentStep={currentStep} />
@@ -94,15 +131,14 @@ export default function RegisterUserForm() {
         encType="multipart/form-data"
         className="mt-3"
       >
-        <div className=" border border-gray-300 p-6 rounded-lg mt-1">
+        <div className="border border-gray-300 p-5 rounded-lg">
           {currentStep === 0 && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <h2 className="text-sm font-semibold">User Details</h2>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 <InputForm
                   labelName="First Name"
                   inputType="text"
@@ -169,6 +205,15 @@ export default function RegisterUserForm() {
                   errors={errors}
                   required={true}
                 />
+                <SelectInput
+                  labelName="Designation"
+                  errors={errors}
+                  register={register}
+                  name="designation"
+                  options={["Member", "Trial-Member"]}
+                  required={true}
+                  onChange={(e) => setDesignation(e.target.value)}
+                />
               </div>
               <hr className="w-full mt-6  border-t-[1.4px] border-gray-300" />
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
@@ -195,8 +240,7 @@ export default function RegisterUserForm() {
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <h2 className="text-sm font-semibold">Body Metrics</h2>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 <InputForm
                   labelName="Height"
                   inputType="number"
@@ -275,8 +319,22 @@ export default function RegisterUserForm() {
           )}
           {currentStep === 2 && (
             <>
-              <h2 className="text-sm font-semibold">Subscription</h2>
-              <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
+                <SelectInput
+                  labelName="Category"
+                  errors={errors}
+                  register={register}
+                  name="category"
+                  options={["Gym", "Cardio", "Gym + Cardio"]}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+                <SelectInput
+                  labelName="Payment Method"
+                  errors={errors}
+                  register={register}
+                  name="paymentMethod"
+                  options={["Cash", "Esewa", "Khalti"]}
+                />
                 <InputForm
                   labelName="Join Date"
                   inputType="date"
@@ -285,13 +343,26 @@ export default function RegisterUserForm() {
                   name="joindate"
                   errors={errors}
                 />
-                <SelectInput
-                  labelName="Subscription"
-                  errors={errors}
-                  register={register}
-                  name="enddate"
-                  options={["1 Month", "2 Month", "3 Month"]}
-                />
+                {designation == "Trial-Member" ? (
+                  <InputForm
+                    labelName="End Date"
+                    inputType="date"
+                    register={register}
+                    registrationOption={{ valueAsDate: true }}
+                    name="end_date"
+                    errors={errors}
+                  />
+                ) : (
+                  <SelectInput
+                    labelName="Subscription"
+                    errors={errors}
+                    register={register}
+                    name="enddate"
+                    options={["1 Month", "2 Month", "3 Month"]}
+                    onChange={(e) => setSubscription(e.target.value)}
+                  />
+                )}
+
                 {/* <InputForm
                   labelName="End Date"
                   inputType="date"
@@ -305,14 +376,102 @@ export default function RegisterUserForm() {
                   errors={errors}
                   register={register}
                   name="paymentStatus"
-                  options={["Pending", "Settled"]}
+                  options={["Pending", "Settled", "Overdue"]}
                 />
               </div>
+              <p className="mt-4 font-semibold text-xs">Add ons:</p>
+              <div className="mt-2 flex ">
+                <button
+                  className={`flex text-xs font-semibold px-3 py-2 border-[1.4px] rounded-md mr-2 ${
+                    selectedAddOns.includes("Shower")
+                      ? "border-[#A75815] text-[#A75815]"
+                      : "border-gray-300"
+                  }`}
+                  type="button"
+                  value="Shower"
+                  onClick={() => handleAddOnClick("Shower")}
+                >
+                  Shower{" "}
+                  {selectedAddOns.includes("Shower") ? (
+                    <FaCheck className="ml-2 mt-[2px]" />
+                  ) : (
+                    "+"
+                  )}
+                </button>
+                <button
+                  className={`flex text-xs font-semibold px-3 py-2 border-[1.4px] rounded-md mr-2 ${
+                    selectedAddOns.includes("Locker")
+                      ? "border-[#A75815] text-[#A75815]"
+                      : "border-gray-300"
+                  }`}
+                  type="button"
+                  value="Locker"
+                  onClick={() => handleAddOnClick("Locker")}
+                >
+                  Locker
+                  {selectedAddOns.includes("Locker") ? (
+                    <FaCheck className="ml-2 mt-[2px]" />
+                  ) : (
+                    "+"
+                  )}
+                </button>
+                <button
+                  className={`flex text-xs font-semibold px-3 py-2 border-[1.4px] rounded-md mr-2 ${
+                    selectedAddOns.includes("Sauna")
+                      ? "border-[#A75815] text-[#A75815]"
+                      : "border-gray-300"
+                  }`}
+                  type="button"
+                  value="Sauna"
+                  onClick={() => handleAddOnClick("Sauna")}
+                >
+                  Sauna
+                  {selectedAddOns.includes("Sauna") ? (
+                    <FaCheck className="ml-2 mt-[2px]" />
+                  ) : (
+                    "+"
+                  )}
+                </button>
+                <button
+                  className={`flex text-xs font-semibold px-3 py-2 border-[1.4px] rounded-md mr-2 ${
+                    selectedAddOns.includes("Personal Training")
+                      ? "border-[#A75815] text-[#A75815]"
+                      : "border-gray-300"
+                  }`}
+                  type="button"
+                  value="Personal Training"
+                  onClick={() => handleAddOnClick("Personal Training")}
+                >
+                  Personal Training
+                  {selectedAddOns.includes("Personal Training") ? (
+                    <FaCheck className="ml-2 mt-[2px]" />
+                  ) : (
+                    "+"
+                  )}
+                </button>
+              </div>
+              <div className="flex mt-4 justify-between">
+                <p className="text-xs font-semibold">{category}</p>
+                <p className="text-xs">
+                  Rs {Pricing[category] * Subscription[subscription]}
+                </p>
+              </div>
+              {selectedAddOns.length != 0 &&
+                selectedAddOns.map((addOns) => (
+                  <AddOns addOns={addOns} key={addOns} />
+                ))}
+              <div className="flex justify-between mt-2">
+                <p className="text-xs font-semibold">Total</p>
+                <p className="text-xs font-semibold">
+                  Rs {categoryTimesSubscription + AddOn}
+                </p>
+              </div>
               <button
-                type="submit" disabled={isSubmitting}
-                className="font-light mt-6 px-10 py-1 bg-black text-white rounded-lg text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
+                type="submit"
+                disabled={isSubmitting}
+                className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-lg text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting && (<Loading loadingText="Registering..."/>)}
+                {isSubmitting && <Loading loadingText="Registering..." />}
                 Register
               </button>
             </>
@@ -330,7 +489,7 @@ export default function RegisterUserForm() {
         </button>
         <button
           type="button"
-          className="font-light mt-6 px-10 py-1 bg-[#1400FF] text-white rounded-lg text-sm disabled:cursor-not-allowed disabled:opacity-50"
+          className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-lg text-sm disabled:cursor-not-allowed disabled:opacity-50"
           disabled={currentStep === steps.length - 1}
           onClick={next}
         >

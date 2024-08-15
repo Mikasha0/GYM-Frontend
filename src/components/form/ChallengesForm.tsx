@@ -7,12 +7,14 @@ import InputForm from "../ui/inputForm";
 import TextareaForm from "../ui/textareaForm";
 import SelectInput from "../ui/selectInput";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 export default function ChallengesForm({
   updateSetShow,
 }: {
   updateSetShow: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -28,7 +30,7 @@ export default function ChallengesForm({
   ) => {
     const challengesData = data;
     try {
-      const response = await fetch("http://localhost:2000/challenges", {
+      const response = await fetch("https://haster-gym-server.onrender.com/challenges", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,8 +44,8 @@ export default function ChallengesForm({
 
       await response.json();
       queryClient.invalidateQueries({ queryKey: ["challenges"] });
-      alert("Challenge added successfully!");
-      updateSetShow(false);
+      toast.success("Challenge added successfully!");
+       updateSetShow(false);
       reset();
     } catch (error) {
       console.error("Error adding challenge:", error);

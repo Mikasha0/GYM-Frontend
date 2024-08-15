@@ -7,7 +7,7 @@ import ShopDetailCard from "./ShopDetailCard";
 import { useEffect, useState } from "react";
 
 const fetchShopAPI = async () => {
-  const response = await fetch("http://localhost:2000/shop");
+  const response = await fetch("https://haster-gym-server.onrender.com/shop");
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
@@ -15,8 +15,8 @@ const fetchShopAPI = async () => {
 };
 
 const ShopComponent = () => {
-    const [shopItems, setShopItems] = useState([]);
-    const [value, setValue] = useState("")
+  const [shopItems, setShopItems] = useState([]);
+  const [value, setValue] = useState("");
   const {
     data: shop,
     isError,
@@ -34,7 +34,7 @@ const ShopComponent = () => {
 
   const handleSearch = () => {
     if (shop) {
-      const filteredMembers = shop.filter((items:any) =>
+      const filteredMembers = shop.filter((items: any) =>
         items.name.toLowerCase().includes(value.toLowerCase())
       );
       setShopItems(filteredMembers);
@@ -86,7 +86,7 @@ const ShopComponent = () => {
           <ShopDetailCard key={item.id} items={item} />
         ))}
         <div>
-            <button className="w-5 h-5 border border-black">+</button>
+          <button className="w-5 h-5 border border-black">+</button>
         </div>
       </div>
     </>

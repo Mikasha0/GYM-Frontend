@@ -42,11 +42,12 @@ export default function LoginForm() {
         <input
           type="text"
           placeholder="Email address*"
+          value="Mikasha@316"
           {...register("username")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />
         {errors.username ? (
-          <p className="text-sm text-red-400 mt-1">{errors.username.message}</p>
+          <p className="text-xs text-red-400 mt-1">{errors.username.message}</p>
         ) : null}
       </div>
       <div className="mt-4">
@@ -54,11 +55,12 @@ export default function LoginForm() {
         <input
           type="password"
           placeholder="password*"
+          value="12@Dharan"
           {...register("password")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />
         {errors.password ? (
-          <p className="text-sm text-red-400 mt-1">{errors.password.message}</p>
+          <p className="text-xs text-red-400 mt-1">{errors.password.message}</p>
         ) : null}
       </div>
       <button
@@ -87,7 +89,7 @@ export default function LoginForm() {
               className="cursor-pointer text-blue-500 text-xs font-semibold"
               onClick={toggleLoginRegister}
             >
-              Log In
+              &nbsp; Log In
             </a>
           </p>
         </>

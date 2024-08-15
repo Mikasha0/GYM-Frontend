@@ -8,7 +8,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { z } from "zod";
 import InputForm from "./ui/inputForm";
 import Pagination from "./ui/pagination";
-import Image from 'next/image'
+import Image from "next/image";
+import { toast } from "sonner";
 
 export default function ProductTable({
   products,
@@ -34,7 +35,7 @@ export default function ProductTable({
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`http://localhost:2000/products/${id}`, {
+      const response = await fetch(`https://haster-gym-server.onrender.com/products/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -44,7 +45,7 @@ export default function ProductTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      alert("Product deleted successfully");
+      toast.success("Product deleted successfully!");
     },
     onError: () => {
       alert("Failed to delete product");
@@ -75,7 +76,7 @@ export default function ProductTable({
         image: imageUrl,
       };
       const response = await fetch(
-        `http://localhost:2000/products/${data.id}`,
+        `https://haster-gym-server.onrender.com/products/${data.id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -89,7 +90,7 @@ export default function ProductTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      alert("Product updated successfully");
+      toast.success("Product updated successfully!");
       setImageName("");
       setEditProductId(null);
     },
@@ -120,7 +121,7 @@ export default function ProductTable({
     setEditProductId(null);
     setDisplay(false);
     setEnableInput(false);
-    setImageName("")
+    setImageName("");
   };
 
   const handleImageChange = (event: any) => {
@@ -189,25 +190,21 @@ export default function ProductTable({
                 {product.quantity}
               </td>
               <td className="px-6 py-4 text-xs font-normal text-white">
-                <span
-                  className={`w-full px-3 py-[3px] rounded-sm text-white ${
-                    product.quantity > 10
-                      ? "bg-blue-400"
-                      : product.quantity <= 10
-                      ? "bg-yellow-400"
-                      : product.quantity === 0
-                      ? "bg-red-500"
-                      : "bg-black"
-                  }`}
+                <p
+                  className={`w-[70%] px-3 py-[3px] rounded-sm text-white ${
+                    product.quantity === 0
+                    ? "bg-[#FC4B67]"
+                    : product.quantity <= 10
+                    ? "bg-[#FEB621]"
+                    : "bg-[#15C3FF]"
+                }`}
                 >
-                  {product.quantity <= 10
-                    ? "Low Stock"
-                    : product.quantity == 0
+                  {product.quantity === 0
                     ? "Sold Out"
-                    : product.quantity > 10
-                    ? "Stock"
-                    : null}
-                </span>
+                    : product.quantity <= 10
+                    ? "Low Stock"
+                    : "Stock"}
+                </p>
               </td>
               <td>
                 <CiEdit
@@ -236,16 +233,16 @@ export default function ProductTable({
                       </button>
                     </div>
                     <InputForm
-                        inputType="text"
-                        labelName="Product Name"
-                        inputClassName={`font-semibold text-xs ${
-                          display ? "" : "border-none"
-                        }`}
-                        register={register}
-                        name="name"
-                        errors={errors}
-                        enable={enableInput}
-                      />
+                      inputType="text"
+                      labelName="Product Name"
+                      inputClassName={`font-semibold text-xs ${
+                        display ? "" : "border-none"
+                      }`}
+                      register={register}
+                      name="name"
+                      errors={errors}
+                      enable={enableInput}
+                    />
                     <div className="grid grid-cols-2 gap-3">
                       <InputForm
                         inputType="number"
@@ -302,14 +299,14 @@ export default function ProductTable({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        className="text-xs text-white bg-red-500 rounded-md px-2 py-1 mr-2 mt-3"
+                        className="text-xs text-white bg-[#F94343] rounded-md px-2 py-1 mr-2 mt-3"
                         onClick={handleCancelEdit}
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="text-xs text-white py-1 bg-blue-500 rounded-md px-2 mt-3"
+                        className="text-xs text-white py-1 bg-[#A75815] rounded-md px-2 mt-3"
                       >
                         Update
                       </button>

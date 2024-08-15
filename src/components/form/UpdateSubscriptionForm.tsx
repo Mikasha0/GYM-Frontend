@@ -11,6 +11,7 @@ import { MdSystemUpdateAlt } from "react-icons/md";
 import { z } from "zod";
 import InputForm from "../ui/inputForm";
 import SelectInput from "../ui/selectInput";
+import { toast } from "sonner";
 
 export default function UpdateSubscriptionForm({
   memberDetails,
@@ -34,15 +35,25 @@ export default function UpdateSubscriptionForm({
     resolver: zodResolver(updateSubscriptionSchema),
     mode: "onChange",
     defaultValues: {
+      category:memberDetails.category,
+      paymentMethod:memberDetails.paymentMethod,
       joindate: new Date(memberDetails.joindate).toISOString().split("T")[0],
-      enddate: memberDetails.enddate,
+      end_date:
+        memberDetails.designation === "Trial-Member" && memberDetails.end_date
+          ? new Date(memberDetails.end_date).toISOString().split("T")[0]
+          : undefined,
+      enddate:
+        memberDetails.designation === "Member"
+          ? memberDetails.enddate
+          : undefined,
       paymentStatus: memberDetails.paymentStatus,
     },
   });
+
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof updateSubscriptionSchema>) => {
       const response = await fetch(
-        `http://localhost:2000/users/${memberDetails.id}`,
+        `https://haster-gym-server.onrender.com/users/${memberDetails.id}`,
         {
           method: "PATCH",
           headers: {
@@ -65,9 +76,18 @@ export default function UpdateSubscriptionForm({
         joindate: new Date(subscriptionData.joindate)
           .toISOString()
           .split("T")[0],
-        enddate: new Date(subscriptionData.enddate).toISOString().split("T")[0],
+        end_date:
+          memberDetails.designation === "Non-Member"
+            ? new Date(subscriptionData.end_date).toISOString().split("T")[0]
+            : undefined,
+        enddate:
+          memberDetails.designation === "Member"
+            ? subscriptionData.enddate
+            : "",
       });
-      alert("Subscription updated successfully");
+      setDisplay(!display);
+      setEnableInput(!enableInput);
+      toast.success("Subscription updated successfully!");
     },
     onError: () => {
       alert("Failed to update Subscription");
@@ -105,6 +125,30 @@ export default function UpdateSubscriptionForm({
         <>
           <div className="flex mt-1">
             <div className="w-8/12 grid grid-cols-5 gap-3">
+              <SelectInput
+                labelName="Category"
+                errors={errors}
+                register={register}
+                labelClassName="text-gray-400 font-light ml-[10px]"
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
+                name="category"
+                options={["Gym", "Cardio", "Gym + Cardio"]}
+                enable={enableInput}
+              />
+              <SelectInput
+                labelName="Payment Method"
+                errors={errors}
+                register={register}
+                labelClassName="text-gray-400 font-light ml-[10px]"
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
+                name="paymentMethod"
+                options={["Cash", "Esewa", "Khalti"]}
+                enable={enableInput}
+              />
               <InputForm
                 labelName="Join Date"
                 inputType="date"
@@ -118,31 +162,35 @@ export default function UpdateSubscriptionForm({
                 errors={errors}
                 enable={enableInput}
               />
-              {/* <InputForm
-                labelName="End Date"
-                inputType="date"
-                register={register}
-                name="enddate"
-                registrationOption={{ valueAsDate: true }}
-                labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs  ${
-                  display ? "" : "border-none"
-                }`}
-                errors={errors}
-                enable={enableInput}
-              /> */}
-              <SelectInput
-                labelName="Subscription"
-                errors={errors}
-                register={register}
-                labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${
-                  display ? "" : "border-none"
-                }`}
-                name="enddate"
-                options={["1 Month", "2 Month", "3 Month"]}
-                enable={enableInput}
-              />
+              {memberDetails.designation === "Trial-Member" ? (
+                <InputForm
+                  labelName="End Date"
+                  inputType="date"
+                  register={register}
+                  name="end_date"
+                  registrationOption={{ valueAsDate: true }}
+                  labelClassName="text-gray-400 font-light ml-[10px]"
+                  inputClassName={`font-semibold text-xs ${
+                    display ? "" : "border-none"
+                  }`}
+                  errors={errors}
+                  enable={enableInput}
+                />
+              ) : memberDetails.designation === "Member" ? (
+                <SelectInput
+                  labelName="Subscription"
+                  errors={errors}
+                  register={register}
+                  labelClassName="text-gray-400 font-light ml-[10px]"
+                  inputClassName={`font-semibold text-xs ${
+                    display ? "" : "border-none"
+                  }`}
+                  name="enddate"
+                  options={["1 Month", "2 Month", "3 Month"]}
+                  enable={enableInput}
+                />
+              ) : null}
+
               <SelectInput
                 labelName="Payment Status"
                 errors={errors}
@@ -152,7 +200,7 @@ export default function UpdateSubscriptionForm({
                   display ? "" : "border-none"
                 }`}
                 name="paymentStatus"
-                options={["Settled", "Pending"]}
+                options={["Settled", "Pending", "Overdue"]}
                 enable={enableInput}
               />
             </div>

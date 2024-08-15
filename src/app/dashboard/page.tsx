@@ -4,15 +4,16 @@ import { UserData } from "@/types/userdata.type";
 import { PROFILE_IMG } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
 import { IoIosSearch } from "react-icons/io";
-import { SalesLineChart } from "@/components/SalesLineChart";
+import MemberLineChart from "@/components/MemberLineChart";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 import Member from "@/components/Member";
 import TaskPage from "@/components/TaskPage";
-import Image from 'next/image'
+import Image from "next/image";
+import Greeting from "@/components/Greeting";
 
 export const getMemberDetails = async (): Promise<UserData[]> => {
-  const data = await fetch(`http://localhost:2000/users`);
+  const data = await fetch(`https://haster-gym-server.onrender.com/users`);
   if (!data.ok) {
     throw new Error("Network response was not ok");
   }
@@ -21,8 +22,9 @@ export const getMemberDetails = async (): Promise<UserData[]> => {
 
 export default function Dashboard() {
   const [value, setValue] = useState("");
+
   const {
-    data:   members,
+    data: members,
     isError,
     isLoading,
   } = useQuery({ queryKey: ["members"], queryFn: getMemberDetails });
@@ -55,12 +57,12 @@ export default function Dashboard() {
   const displayedMembers = value ? handleSearch() : members;
 
   return (
-    <div className="w-full bg-gray-100 p-5 h-full">
-      <div className="w-full bg-white p-3 rounded-lg shadow-lg ">
+    <div className="w-full bg-gray-100 p-5 min-h-screen flex flex-col">
+      <div className="w-full bg-white p-3 rounded-lg shadow-lg flex-grow flex flex-col">
         <div className="w-full bg-white rounded-lg flex-shrink-0 sticky top-0 z-10">
           <div className="flex justify-between">
             <div>
-              <h1 className="font-bold">Good Morning, Aniket</h1>
+              <h1 className="font-bold"><Greeting/></h1>
               <h1 className="text-gray-500 text-sm font-light">
                 Rise, shine and conquer the day.
               </h1>
@@ -74,20 +76,20 @@ export default function Dashboard() {
             />
           </div>
         </div>
-        <div className=" flex gap-3 w-full">
-          <div className="w-6/12 rounded-lg bg-white shadow-lg mt-4 p-3 border-[1px] h-full">
+        <div className="flex gap-3 w-full">
+          <div className="w-6/12 rounded-lg bg-white shadow-lg mt-4 p-3 border-[1px]">
             <TaskPage />
           </div>
           <div className="w-3/12 rounded-lg bg-white shadow-lg mt-4 p-3 px-4 border-[1px] h-[230px]">
             <Member member={displayedMembers} />
           </div>
-          <div className="w-3/12 rounded-lg bg-white shadow-lg mt-4 p-3 border-[1px] h-full">
-            <h1 className="font-semibold text-sm">Membership Sales</h1>
-            <SalesLineChart />
+          <div className="w-3/12 rounded-lg bg-white shadow-lg mt-4 p-3 border-[1px] h-[230px]">
+            <h1 className="font-semibold text-sm">Membership Details</h1>
+            <MemberLineChart member={displayedMembers} />
           </div>
         </div>
-        <div className="w-full bg-white p-3 rounded-lg shadow-lg mt-4 border-[1px]">
-          <div className="mb-5  flex justify-between">
+        <div className="w-full bg-white p-3 rounded-lg shadow-lg mt-4 border-[1px] flex-grow">
+          <div className="mb-5 flex justify-between">
             <h1 className="text-sm font-semibold">Member Sheet</h1>
             <div className="relative">
               <input

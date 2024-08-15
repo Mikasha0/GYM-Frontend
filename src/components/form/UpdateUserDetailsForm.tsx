@@ -11,6 +11,7 @@ import { MdSystemUpdateAlt } from "react-icons/md";
 import { z } from "zod";
 import InputForm from "../ui/inputForm";
 import SelectInput from "../ui/selectInput";
+import { toast } from "sonner";
 
 export default function UpdateUserDetailsForm({
   memberDetails,
@@ -41,6 +42,7 @@ export default function UpdateUserDetailsForm({
       phone:memberDetails.phone,
       address:memberDetails.address,
       gender:memberDetails.gender,
+      designation:memberDetails.designation,
       dateOfBirth: new Date(memberDetails?.dateOfBirth).toISOString().split("T")[0]  ,
       emergencyContactName:memberDetails.emergencyContactName,
       emergencyContactNumber:memberDetails.emergencyContactNumber
@@ -49,7 +51,7 @@ export default function UpdateUserDetailsForm({
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof updateUserDetailsSchema>) => {
       const response = await fetch(
-        `http://localhost:2000/users/${memberDetails.id}`,
+        `https://haster-gym-server.onrender.com/users/${memberDetails.id}`,
         {
           method: "PATCH",
           headers: {
@@ -73,7 +75,9 @@ export default function UpdateUserDetailsForm({
           .toISOString()
           .split("T")[0],
       });
-      alert("User details updated successfully");
+      setDisplay(!display);
+      setEnableInput(!enableInput);
+      toast.success("User details updated successfully!");
     },
     onError: () => {
       alert("Failed to update user details");
@@ -85,6 +89,7 @@ export default function UpdateUserDetailsForm({
       reset();
       setDisplay(!display);
       setEnableInput(!enableInput);
+      console.log(display, !enableInput)
     } else {
       setDisplay(!display);
       setEnableInput(!enableInput);
@@ -191,6 +196,18 @@ export default function UpdateUserDetailsForm({
                 }`}
                 name="gender"
                 options={["Male", "Female", "Other"]}
+                enable={enableInput}
+              />
+               <SelectInput
+                labelName="Designation"
+                errors={errors}
+                register={register}
+                labelClassName="text-gray-400 font-light ml-[10px]"
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
+                name="designation"
+                options={["Member", "Trial-Member"]}
                 enable={enableInput}
               />
               <InputForm

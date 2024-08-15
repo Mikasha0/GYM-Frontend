@@ -6,6 +6,7 @@ import InputForm from "../ui/inputForm";
 import SelectInput from "../ui/selectInput";
 import TextareaForm from "../ui/textareaForm";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function TaskForm({updatePopup}:{updatePopup:React.Dispatch<React.SetStateAction<boolean>>}) {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ export default function TaskForm({updatePopup}:{updatePopup:React.Dispatch<React
   const createTask = async (data: z.infer<typeof createTaskSchema>) => {
     const taskData = { ...data, status: "incomplete" };
     try {
-      const response = await fetch("http://localhost:2000/task", {
+      const response = await fetch("https://haster-gym-server.onrender.com/task", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +38,7 @@ export default function TaskForm({updatePopup}:{updatePopup:React.Dispatch<React
 
       await response.json();
       queryClient.invalidateQueries({ queryKey: ["task"] });
+      toast.success("Task created successfully");
       updatePopup(false)
       reset();
     } catch (error) {

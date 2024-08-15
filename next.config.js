@@ -28,6 +28,12 @@ module.exports = {
             port: '',
             pathname: '/**',
           },
+          {
+            protocol: 'https',
+            hostname: 'static-01.daraz.com.np',
+            port: '',
+            pathname: '/**',
+        },
       ],
     },
   };

@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { UserData } from "@/types/userdata.type";
 
 ChartJS.register(
   CategoryScale,
@@ -21,7 +22,16 @@ ChartJS.register(
   Legend
 );
 
-export const SalesLineChart = () => {
+export const MemberLineChart = ({ member }: { member: UserData[] }) => {
+  const registrationCounts = Array(12).fill(0);
+
+  member.forEach((user) => {
+    const registrationDate = new Date(user.joindate);
+    const month = registrationDate.getMonth();
+    registrationCounts[month]++;
+  });
+
+  console.log(member.length);
   const data = {
     labels: [
       "January",
@@ -39,15 +49,12 @@ export const SalesLineChart = () => {
     ],
     datasets: [
       {
-        label: "Sales",
-        data: [
-          6500, 6418, 6456, 6526, 6356, 6456, 6600, 6500, 6418, 6456, 6526,
-          6356, 6456, 6600,
-        ],
+        label: "Members",
+        data: registrationCounts,
         borderColor: "#1A56DB",
         backgroundColor: "rgba(26, 86, 219, 0.5)",
         fill: true,
-        tension: 0.4, // Smooth line
+        tension: 0.4,
       },
     ],
   };
@@ -79,14 +86,20 @@ export const SalesLineChart = () => {
   };
 
   return (
-    <div className="h-full">
-      <p className="font-bold text-sm mt-1">Rs. 12,321</p>
+    <div className="h-[90%] flex flex-col justify-between">
+    <div>
+      <p className="font-semibold text-xs mt-2">
+        Total Members: {member.length}  
+      </p>
+    </div>
+    <div className="flex flex-col justify-end h-full">
       <Line data={data} options={options} />
-      <span className="" style={{ fontSize: "9px" }}>
-        Sales have increased by 17.1% compared to last month.
+      <span className="text-center" style={{ fontSize: "9px", marginTop: "8px" }}>
+        Registration trends over the year.
       </span>
     </div>
+  </div>
   );
 };
 
-export default SalesLineChart;
+export default MemberLineChart;

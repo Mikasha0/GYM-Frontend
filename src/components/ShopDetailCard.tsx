@@ -1,12 +1,14 @@
-import Image from 'next/image';
+import Image from "next/image";
 import { MdFavoriteBorder } from "react-icons/md";
 
 export default function ShopDetailCard({ items }: { items: any }) {
   return (
     <div className="w-full bg-white border  border-gray-200 h-[280px] rounded-lg shadow-md hover:shadow-xl">
       <Image
+        height={300}
+        width={185}
         src={items.photo}
-        className="w-full p-2"
+        className="p-2"
         alt="profile-img"
       />
       <div className="flex-col px-2">
@@ -18,11 +20,7 @@ export default function ShopDetailCard({ items }: { items: any }) {
           {items.description}
         </p>
         <div className="flex justify-between mt-1">
-          <p
-            className="text-base text-[#1400FF]"
-          >
-            Rs.{items.price}
-          </p>
+          <p className="text-base text-[#1400FF]">Rs.{items.price}</p>
           <button className="bg-[#1400FF] text-xs text-white rounded-sm p-1">
             View Details
           </button>

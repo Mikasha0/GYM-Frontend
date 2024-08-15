@@ -7,7 +7,7 @@ export default function page() {
   return (
     <div className="bg-gray-100 w-full p-5">
       <div className="w-full bg-white p-3 shadow-lg rounded-lg">
-          <Shop />
+        <Shop />
       </div>
     </div>
   );

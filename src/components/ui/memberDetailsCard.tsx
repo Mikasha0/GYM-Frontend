@@ -1,13 +1,14 @@
 import { UserData } from "@/types/userdata.type";
+import Image from "next/image";
 import Link from "next/link";
+import { FC } from "react";
 import { BsFire } from "react-icons/bs";
 import { IoPersonCircleSharp } from "react-icons/io5";
-import Image from 'next/image'
 
 export default function MemberDetailsCard({ member }: { member: UserData }) {
   return (
     <Link href={`/dashboard/members/${member.id}`} key={member.id}>
-      <div className="w-full bg-white border p-3 border-gray-200 h-[250px] rounded-lg shadow-md hover:shadow-xl">
+      <div className="w-full bg-white border p-3 border-gray-200 h-[245px] rounded-lg shadow-md hover:shadow-xl">
         <div className="flex justify-end">
           <BsFire className="text-red-400" />
           <p className="text-sm font-semibold -mt-[3px] pl-2">
@@ -17,16 +18,15 @@ export default function MemberDetailsCard({ member }: { member: UserData }) {
 
         <div className="flex justify-center">
           {member.profile ? (
-           <Image
-           src={member.profile}
-           className="rounded-full"
-           width={85}
-           height={85}
-           alt="profile-img"
-         />
+            <Image
+              src={member.profile}
+              className="rounded-full"
+              width={85}
+              height={85}
+              alt="profile-img"
+            />
           ) : (
-            <IoPersonCircleSharp size={85}/>
-
+            <IoPersonCircleSharp size={85} />
           )}
         </div>
         <div className="flex-col text-center mt-4">
@@ -42,3 +42,25 @@ export default function MemberDetailsCard({ member }: { member: UserData }) {
     </Link>
   );
 }
+
+interface WithNonMemberTagProps {
+  member: UserData;
+}
+export const WithNonMemberTag = (Component: FC<WithNonMemberTagProps>) => {
+  const EnhancedComponent: FC<WithNonMemberTagProps> = ({ member }) => {
+    return (
+      <div className="relative">
+             <div className="absolute top-1 left-2">
+            <span className="inline-block px-2 py-[3px] text-[9px] font-semibold text-orange-600 bg-gray-200 rounded-md">
+              Trial Member
+            </span>
+          </div>
+        <Component member={member} />
+      </div>
+    );
+  };
+
+  return EnhancedComponent;
+};
+
+export const EnhancedMemberDetailsCard = WithNonMemberTag(MemberDetailsCard);

@@ -8,6 +8,7 @@ import TextareaForm from "../ui/textareaForm";
 import { CiImageOn } from "react-icons/ci";
 import { useState } from "react";
 import Loading from "../ui/loading";
+import { toast } from "sonner";
 
 export default function ProductForm({
   updateSetShow,
@@ -35,6 +36,7 @@ export default function ProductForm({
       setImageName("");
     }
   };
+  const notify = () => toast("This is a sonner toast");
 
   const createProduct = async (data: z.infer<typeof createProductSchema>) => {
     const image = data.profile[0];
@@ -60,7 +62,7 @@ export default function ProductForm({
     };
 
     try {
-      const response = await fetch("http://localhost:2000/products", {
+      const response = await fetch("https://haster-gym-server.onrender.com/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,6 +76,7 @@ export default function ProductForm({
 
       await response.json();
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success("Product added successfully!");
       // alert("Product added successfully!");
       updateSetShow(false);
       reset();
@@ -163,25 +166,20 @@ export default function ProductForm({
       </div> */}
 
       <div className="flex justify-end mt-4">
-      <button
-  type="submit"
-  className="px-3 py-1 bg-[#FF0000] text-white rounded-md text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
-  onClick={() => updateSetShow(false)}
->
-  Cancel
-</button>
-<button
-  type="submit"
-  disabled={isSubmitting}
-  className="px-3 py-1 bg-[#1400FF] text-white rounded-md text-xs disabled:cursor-not-allowed disabled:opacity-50"
->
-  {isSubmitting ? (
-   <Loading loadingText="Adding..."/>
-  ) : (
-    "Add Item"
-  )}
-</button>
-
+        <button
+          type="submit"
+          className="px-3 py-1 bg-[#FF0000] text-white rounded-md text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={() => updateSetShow(false)}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-3 py-1 bg-[#1400FF] text-white rounded-md text-xs disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {isSubmitting ? <Loading loadingText="Adding..." /> : "Add Item"}
+        </button>
       </div>
     </form>
   );

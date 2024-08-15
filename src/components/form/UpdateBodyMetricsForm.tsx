@@ -11,6 +11,7 @@ import { MdSystemUpdateAlt } from "react-icons/md";
 import { z } from "zod";
 import InputForm from "../ui/inputForm";
 import SelectInput from "../ui/selectInput";
+import { toast } from "sonner";
 
 export default function UpdateBodyMetricsForm({
   memberDetails,
@@ -25,7 +26,12 @@ export default function UpdateBodyMetricsForm({
   const [enableInput, setEnableInput] = useState<boolean>(true);
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<z.infer<typeof updateBodyMetricsSchema>>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof updateBodyMetricsSchema>>({
     resolver: zodResolver(updateBodyMetricsSchema),
     mode: "onChange",
     defaultValues: {
@@ -36,7 +42,7 @@ export default function UpdateBodyMetricsForm({
   const mutation = useMutation({
     mutationFn: async (data: z.infer<typeof updateBodyMetricsSchema>) => {
       const response = await fetch(
-        `http://localhost:2000/users/${memberDetails.id}`,
+        `https://haster-gym-server.onrender.com/users/${memberDetails.id}`,
         {
           method: "PATCH",
           headers: {
@@ -55,7 +61,9 @@ export default function UpdateBodyMetricsForm({
     onSuccess: (updatedData) => {
       queryClient.invalidateQueries({ queryKey: ["member", memberDetails.id] });
       reset(updatedData);
-      alert("Body Metrics updated successfully");
+      setDisplay(!display);
+      setEnableInput(!enableInput);
+      toast.success("Body Metrics updated successfully!");
     },
     onError: () => {
       alert("Failed to update body metrics");
@@ -80,7 +88,10 @@ export default function UpdateBodyMetricsForm({
 
   return (
     <form onSubmit={handleSubmit((data) => mutation.mutate(data))}>
-      <div className="flex justify-between cursor-pointer" onClick={handleClick}>
+      <div
+        className="flex justify-between cursor-pointer"
+        onClick={handleClick}
+      >
         <h1 className="font-semibold text-sm">Body Metrics</h1>
         <span>
           <FaAngleDown />
@@ -94,7 +105,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Height"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="height"
@@ -105,7 +118,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Weight"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="weight"
@@ -116,7 +131,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Hips"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="hips"
@@ -127,7 +144,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Chest"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="chest"
@@ -138,7 +157,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Waist"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="waist"
@@ -149,7 +170,9 @@ export default function UpdateBodyMetricsForm({
                 labelName="Thigh"
                 inputType="number"
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 register={register}
                 registrationOption={{ valueAsNumber: true }}
                 name="thigh"
@@ -161,7 +184,9 @@ export default function UpdateBodyMetricsForm({
                 errors={errors}
                 register={register}
                 labelClassName="text-gray-400 font-light ml-[10px]"
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 name="bloodGroup"
                 options={["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]}
                 enable={enableInput}
@@ -171,7 +196,9 @@ export default function UpdateBodyMetricsForm({
                 labelClassName="text-gray-400 font-light ml-[10px]"
                 inputType="text"
                 register={register}
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 name="allergies"
                 errors={errors}
                 enable={enableInput}
@@ -181,7 +208,9 @@ export default function UpdateBodyMetricsForm({
                 labelClassName="text-gray-400 font-light ml-[10px]"
                 inputType="text"
                 register={register}
-                inputClassName={`font-semibold text-xs ${display ? "" : "border-none"}`}
+                inputClassName={`font-semibold text-xs ${
+                  display ? "" : "border-none"
+                }`}
                 name="medicalCondition"
                 errors={errors}
                 enable={enableInput}
@@ -194,7 +223,9 @@ export default function UpdateBodyMetricsForm({
                   type="button"
                   onClick={showHideUpdateBtn}
                 >
-                  {display ? "Cancel" : (
+                  {display ? (
+                    "Cancel"
+                  ) : (
                     <>
                       <FiEdit2 size={10} className="mt-[2px] mr-1" /> Edit
                     </>

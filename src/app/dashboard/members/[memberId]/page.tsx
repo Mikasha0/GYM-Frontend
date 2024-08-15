@@ -13,7 +13,7 @@ import { useState } from "react";
 async function getMemberDetailsById(
   memberId: number | undefined
 ): Promise<UserData> {
-  const res = await fetch(`http://localhost:2000/users/${memberId}`)
+  const res = await fetch(`https://haster-gym-server.onrender.com/users/${memberId}`)
   if (!res.ok) {
     throw new Error("Failed to fetch member details");
   }
@@ -50,8 +50,8 @@ export default function MemberDetails({
   }
 
   return (
-    <div className="w-full bg-gray-100 p-5">
-      <div className="w-full bg-white p-4 rounded-lg shadow-lg ">
+    <div className="w-full bg-gray-100 p-5 min-h-screen flex flex-col">
+      <div className="w-full bg-white p-4 rounded-lg shadow-lg flex flex-col flex-grow ">
         <h1 className="font-semibold">User Profile</h1>
         <div className="border border-gray-200 bg-white flex  shadow-lg p-4 rounded-lg mt-4 items-center">
           <Image
@@ -64,14 +64,14 @@ export default function MemberDetails({
           <div>
             <p className="ml-6 text-gray-400 font-light text-xs">Name</p>
             <p className="font-semibold text-xs ml-6 mt-1">
-              {member.firstname} {member.lastname}
+              {member.firstname} {member?.middlename} {member.lastname}
             </p>
           </div>
           <div>
             <p className="font-light text-xs  ml-12 text-gray-400 ">
               Designation
             </p>
-            <p className="font-semibold text-xs  ml-12 mt-1">Member</p>
+            <p className="font-semibold text-xs  ml-12 mt-1">{member.designation}</p>
           </div>
           <div>
             <p className="font-light text-xs  ml-12 text-gray-400">Email</p>

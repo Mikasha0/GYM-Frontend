@@ -6,6 +6,7 @@ interface SelectInputProps extends inputFormType {
   inputClassName?: string;
   labelClassName?: string;
   required?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export default function SelectInput({
@@ -20,6 +21,7 @@ export default function SelectInput({
   labelClassName,
   required,
   options,
+  onChange,
 }: SelectInputProps) {
   return (
     <div>
@@ -32,6 +34,8 @@ export default function SelectInput({
         defaultValue={defaultValue}
         {...register(name, registrationOption)}
         disabled={enable}
+        onChange={onChange}
+
       >
         {options.map(option => (
           <option key={option} value={option}>{option}</option>

@@ -1,8 +1,17 @@
+import { UserData } from "@/types/userdata.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import JoinedMembers from "./joinedMembers";
+import Image from "next/image";
+import Link from "next/link";
+import { toast } from "sonner";
 
-export default function ChallengeDetailsCard({ challenge }: any) {
+export default function ChallengeDetailsCard({
+  challenge,
+  member,
+}: {
+  challenge: any;
+  member: UserData[];
+}) {
   const [present, setPresent] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
@@ -18,9 +27,12 @@ export default function ChallengeDetailsCard({ challenge }: any) {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`http://localhost:2000/challenges/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://haster-gym-server.onrender.com/challenges/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to delete challenge");
       }
@@ -28,7 +40,7 @@ export default function ChallengeDetailsCard({ challenge }: any) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["challenges"] });
-      alert("Challenge deleted successfully");
+      toast.success("Challenge deleted successfully!");
     },
     onError: () => {
       alert("Failed to delete challenge");
@@ -37,11 +49,14 @@ export default function ChallengeDetailsCard({ challenge }: any) {
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await fetch(`http://localhost:2000/challenges/${data.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `https://haster-gym-server.onrender.com/challenges/${data.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to update challenge");
       }
@@ -49,7 +64,7 @@ export default function ChallengeDetailsCard({ challenge }: any) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["challenges"] });
-      alert("Challenge updated successfully");
+      toast.success("Challenge updated successfully!");
       setEditMode(false);
     },
     onError: () => {
@@ -66,7 +81,9 @@ export default function ChallengeDetailsCard({ challenge }: any) {
     setPresent(false);
   };
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -77,9 +94,10 @@ export default function ChallengeDetailsCard({ challenge }: any) {
     e.preventDefault();
     updateMutation.mutate({ id: challenge.id, ...formData });
   };
+  const memberOnly = member.filter((mem) => mem.designation == "Member");
 
   return (
-    <div className="relative w-full bg-white border p-3 border-gray-200 h-[150px] rounded-lg shadow-md hover:shadow-xl">
+    <div className="relative w-full bg-white border p-3 border-gray-200 h-auto rounded-lg shadow-md hover:shadow-xl">
       <div className="flex justify-between">
         <h1 className="font-semibold text-sm line-clamp-3">{challenge.name}</h1>
         <button className="font-black" onClick={showListGroup}>
@@ -103,38 +121,69 @@ export default function ChallengeDetailsCard({ challenge }: any) {
         </ul>
       )}
       {!editMode ? (
-        <p className="text-xs mt-1">{challenge.description}</p>
+        <p className="text-xs mt-1 line-clamp-3">{challenge.description}</p>
       ) : (
-        <form onSubmit={handleFormSubmit}>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleFormChange}
-            className="w-full border p-1 rounded mt-1 text-xs"
-          />
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleFormChange}
-            className="w-full border p-1 rounded mt-1 text-xs"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-3 py-[2px] rounded mt-1 text-xs"
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            onClick={() => setEditMode(false)}
-            className="bg-gray-500 text-white px-3 py-[2px] rounded mt-1 ml-2 text-xs"
-          >
-            Cancel
-          </button>
-        </form>
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+          <div className="bg-white p-5 rounded shadow-lg w-4/12">
+            <div className="flex justify-between">
+              <h1 className="font-semibold mb-1">Update Challenge </h1>
+              <button
+                onClick={() => setEditMode(false)}
+                className="text-gray-400 text-xl mb-1"
+              >
+                &times;
+              </button>
+            </div>
+            <form onSubmit={handleFormSubmit}>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleFormChange}
+                className="w-full border p-1 rounded mt-1 text-xs"
+              />
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleFormChange}
+                className="w-full border p-1 rounded mt-1 text-xs"
+              />
+              <button
+                type="submit"
+                className="bg-[#A75815] text-white px-3 py-[2px] rounded mt-1 text-xs"
+              >
+                Update
+              </button>
+              <button
+                type="button"
+                onClick={() => setEditMode(false)}
+                className="bg-[#F94343] text-white px-3 py-[2px] rounded mt-1 ml-2 text-xs"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
       )}
-      {/* <JoinedMembers/> */}
+      <div className="grid grid-cols-6 mt-2">
+        {memberOnly.slice(0, 4).map((member_image) => (
+          <Image
+            src={member_image.profile}
+            key={member_image.id}
+            className="rounded-full"
+            width={30}
+            height={30}
+            alt="profile-img"
+          />
+        ))}
+        {memberOnly.length > 4 && (
+          <Link href={"/dashboard/members"} className="col-span-2">
+            <span className="text-xs text-black font-semibold hover:text-red-400">
+              +{memberOnly.length - 4} more
+            </span>
+          </Link>
+        )}
+      </div>
     </div>
   );
 }
