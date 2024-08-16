@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 
 export const fetchTime = async () => {
-  const response = await fetch("https://worldtimeapi.org/api/ip");
+  const response = await fetch("https://corsproxy.io/?https://worldtimeapi.org/api/ip");
   if (!response.ok) {
     throw new Error("Failed to fetch time");
   }
