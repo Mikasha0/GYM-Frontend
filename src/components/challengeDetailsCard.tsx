@@ -17,6 +17,7 @@ export default function ChallengeDetailsCard({
   const [formData, setFormData] = useState({
     name: challenge.name,
     description: challenge.description,
+    gender: "Inclusive", // Default gender value
   });
 
   const queryClient = useQueryClient();
@@ -27,12 +28,9 @@ export default function ChallengeDetailsCard({
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(
-        `https://haster-gym-server.onrender.com/challenges/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`/api/challenges/${id}`, {
+        method: "DELETE",
+      });
       if (!response.ok) {
         throw new Error("Failed to delete challenge");
       }
@@ -49,14 +47,17 @@ export default function ChallengeDetailsCard({
 
   const updateMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await fetch(
-        `https://haster-gym-server.onrender.com/challenges/${data.id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        }
-      );
+      console.log(data);
+      const challengeData = {
+        name:data.name,
+        description:data.description,
+        gender:data.gender
+      }
+      const response = await fetch(`/api/challenges/${data.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(challengeData),
+      });
       if (!response.ok) {
         throw new Error("Failed to update challenge");
       }
@@ -82,7 +83,7 @@ export default function ChallengeDetailsCard({
   };
 
   const handleFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setFormData({
       ...formData,
@@ -92,9 +93,10 @@ export default function ChallengeDetailsCard({
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateMutation.mutate({ id: challenge.id, ...formData });
+    updateMutation.mutate({ id: challenge.$id, ...formData });
   };
-  const memberOnly = member.filter((mem) => mem.designation == "Member");
+
+  const memberOnly = member.filter((mem) => mem.designation === "Member");
 
   return (
     <div className="relative w-full bg-white border p-3 border-gray-200 h-auto rounded-lg shadow-md hover:shadow-xl">
@@ -114,7 +116,7 @@ export default function ChallengeDetailsCard({
           </li>
           <li
             className="w-full px-3 py-1 text-xs hover:bg-gray-400 cursor-pointer rounded-md"
-            onClick={() => deleteChallenge(challenge.id)}
+            onClick={() => deleteChallenge(challenge.$id)}
           >
             Delete
           </li>
@@ -148,16 +150,27 @@ export default function ChallengeDetailsCard({
                 onChange={handleFormChange}
                 className="w-full border p-1 rounded mt-1 text-xs"
               />
+              <select
+                name="gender"
+                value={formData.gender}
+                onChange={handleFormChange}
+                className="w-full border p-1 rounded mt-1 text-xs"
+              >
+                <option value="Inclusive">Inclusive</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
               <button
                 type="submit"
-                className="bg-[#A75815] text-white px-3 py-[2px] rounded mt-1 text-xs"
+                className="bg-[#8671D4] w-[106px] text-white px-4 py-2 rounded-sm mt-2 text-xs"
               >
                 Update
               </button>
               <button
                 type="button"
                 onClick={() => setEditMode(false)}
-                className="bg-[#F94343] text-white px-3 py-[2px] rounded mt-1 ml-2 text-xs"
+                className="bg-[#F94343] w-[106px] px-4 py-2 text-white  rounded-sm mt-2 ml-2 text-xs"
               >
                 Cancel
               </button>

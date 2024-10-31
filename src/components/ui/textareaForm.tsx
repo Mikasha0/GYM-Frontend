@@ -30,7 +30,7 @@ export default function TextareaForm({
       </label>
       <textarea
         id={inputName}
-        className={`w-full border border-gray-400 px-3 py-1 mt-2 text-sm text-black rounded-lg ${inputClassName}`}
+        className={`w-full border border-gray-400 px-3 py-1 mt-2 text-sm text-black rounded-md ${inputClassName}`}
         placeholder={placeholder}
         defaultValue={defaultValue}
         {...register(name, registrationOption)}

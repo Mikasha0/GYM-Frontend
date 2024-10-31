@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { UserData } from "@/types/userdata.type";
+import { useTheme } from "@/context/ThemeContext";
 
 ChartJS.register(
   CategoryScale,
@@ -24,6 +25,7 @@ ChartJS.register(
 
 export const MemberLineChart = ({ member }: { member: UserData[] }) => {
   const registrationCounts = Array(12).fill(0);
+  const { darkTheme } = useTheme();
 
   member.forEach((user) => {
     const registrationDate = new Date(user.joindate);
@@ -85,20 +87,59 @@ export const MemberLineChart = ({ member }: { member: UserData[] }) => {
     },
   };
 
+  console.log(member.length);
+
   return (
     <div className="h-[90%] flex flex-col justify-between">
-    <div>
-      <p className="font-semibold text-xs mt-2">
-        Total Members: {member.length}  
-      </p>
+      {member.length == 0 ? (
+        <>
+          <div className="flex">
+            <p
+              className={`font-semibold text-base mt-2 ${
+                darkTheme ? "text-white" : "text-black"
+              }`}
+            >
+              Rs. 0
+            </p>
+            
+          </div>
+          <div className="flex flex-col justify-end h-full">
+            <hr className="border-[#1089FF]"/>
+            <span
+              className={`text-center ${
+                darkTheme ? "text-white" : "text-black"
+              }`}
+              style={{ fontSize: "9px", marginTop: "8px" }}
+            >
+              No sales recorded.
+            </span>
+          </div>
+        </>
+      ) : (
+        <>
+          <div>
+            <p
+              className={`font-semibold text-xs mt-2 ${
+                darkTheme ? "text-white" : "text-black"
+              }`}
+            >
+              Total Members: {member.length}
+            </p>
+          </div>
+          <div className="flex flex-col justify-end h-full pb-6">
+            <Line data={data} options={options} />
+            <span
+              className={`text-center ${
+                darkTheme ? "text-white" : "text-black"
+              }`}
+              style={{ fontSize: "9px", marginTop: "8px" }}
+            >
+              Registration trends over the year.
+            </span>
+          </div>
+        </>
+      )}
     </div>
-    <div className="flex flex-col justify-end h-full">
-      <Line data={data} options={options} />
-      <span className="text-center" style={{ fontSize: "9px", marginTop: "8px" }}>
-        Registration trends over the year.
-      </span>
-    </div>
-  </div>
   );
 };
 

@@ -40,7 +40,7 @@ export default function Pagination({
           {[...Array(totalPages)].map((_, i) => (
             <span
               className={`text-xs border-r-0 px-2 py-1 cursor-pointer text-gray-500 hover:bg-gray-300 hover:text-black rounded-md mr-1 ml-1 ${
-                page === i + 1 ? "bg-black text-white" : ""
+                page === i + 1 ? "bg-[#8671D4] text-white" : ""
               }`}
               key={i}
               onClick={() => selectPageHandler(i + 1)}

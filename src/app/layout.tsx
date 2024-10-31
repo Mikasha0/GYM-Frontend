@@ -1,8 +1,9 @@
+import { ThemeProvider } from "@/context/ThemeContext";
+import ReactQueryProvider from "@/utils/Providers/ReactQueryProvider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import ReactQueryProvider from "@/utils/Providers/ReactQueryProvider";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReactQueryProvider>
-          <Toaster position="top-center"/>
-          <main>{children}</main>
-        </ReactQueryProvider>
+        <ThemeProvider>
+          <ReactQueryProvider>
+            <Toaster position="top-center" />
+            <main>
+              {children}
+            </main>
+          </ReactQueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

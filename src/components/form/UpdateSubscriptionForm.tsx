@@ -224,7 +224,7 @@ export default function UpdateSubscriptionForm({
           </div>
           {display && (
             <button
-              className="px-3 py-1 border border-gray-400 bg-[#A75815] rounded-sm flex text-xs mt-3 text-white"
+              className="px-3 py-1 border border-gray-400 bg-[#8671D4] rounded-sm flex text-xs mt-3 text-white"
               type="submit"
             >
               <MdSystemUpdateAlt className="mt-[1px] mr-1" />

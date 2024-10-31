@@ -13,12 +13,12 @@ export default function FormSteps({ currentStep }: { currentStep: number }) {
           const stepClass = isCompleted
             ? "text-white border-yellow-500 bg-yellow-500"
             : isCurrent
-            ? "text-white border-[#A75815] bg-[#A75815]"
+            ? "text-white border-[#A75815] bg-[#8671D4]"
             : "text-gray-500 border-gray-500";
           const borderClass = isCompleted
             ? "border-yellow-500"
             : isCurrent
-            ? "border-[#A75815]"
+            ? "border-[#8671D4]"
             : "border-gray-200";
 
           return (

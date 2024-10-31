@@ -47,3 +47,18 @@ export const steps = [
     ],
   },
 ];
+
+export const registerSteps = [
+  {
+    fields: ["status"],
+  },
+  {
+    fields: ["gymName"],
+  },
+  {
+    fields: ["fullName", "phoneNumber"],
+  },
+  {
+    fields: [],
+  },
+];

@@ -9,9 +9,10 @@ import { IoIosSearch } from "react-icons/io";
 import { RiAddLargeFill } from "react-icons/ri";
 import { z } from "zod";
 import { getMemberDetails } from "../page";
+import ChallengePlaceholder from "@/components/ChallengePlaceholder";
 export type challengeType = z.infer<typeof createChallengesSchema>;
 export const getChallengesDetails = async (): Promise<challengeType[]> => {
-  const data = await fetch("https://haster-gym-server.onrender.com/challenges");
+  const data = await fetch("/api/challenges");
   if (!data.ok) {
     throw new Error("Network response was not ok");
   }
@@ -40,7 +41,7 @@ export default function Challenges() {
 
   if (challengesLoading || membersLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 h-full">
+      <div className="w-full bg-gray-100 p-3 min-h-screen flex justify-center items-center">
         <Spinner />
       </div>
     );
@@ -74,8 +75,8 @@ export default function Challenges() {
   };
 
   return (
-    <div className="w-full p-5 bg-gray-100 min-h-screen flex flex-col">
-      <div className="w-full bg-white rounded-lg p-3 flex-grow flex flex-col">
+    <div className="w-full py-5 pr-5 bg-gray-100 min-h-screen flex flex-col">
+      <div className="w-full bg-white rounded-2xl p-3 flex-grow flex flex-col">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between">
             <h1 className="font-semibold">Challenges</h1>
@@ -92,16 +93,17 @@ export default function Challenges() {
             </div>
           </div>
           <div className="px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3">
-          {displayedChallenges.map((challenge: any) => (
-            <ChallengeDetailsCard
-              challenge={challenge}
-              key={challenge.id}
-              member={membersData}
-            />
-          ))}
+            {challenges.length == 0 && <ChallengePlaceholder />}
+            {displayedChallenges.map((challenge: any) => (
+              <ChallengeDetailsCard
+                challenge={challenge}
+                key={challenge.id}
+                member={membersData}
+              />
+            ))}
+          </div>
         </div>
-        </div>
-    
+
         {show && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
             <div className="bg-white p-5 rounded shadow-lg w-4/12">

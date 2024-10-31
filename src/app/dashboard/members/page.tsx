@@ -1,16 +1,20 @@
 "use client";
 
+import MemberPlaceholder from "@/components/MemberPlaceholder";
 import MemberDetailsCard, {
-  EnhancedMemberDetailsCard
+  EnhancedMemberDetailsCard,
 } from "@/components/ui/memberDetailsCard";
 import Spinner from "@/components/ui/spinner";
+import { useTheme } from "@/context/ThemeContext";
 import { UserData } from "@/types/userdata.type";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 async function fetchMembers(): Promise<UserData[]> {
-  const res = await fetch(`https://haster-gym-server.onrender.com/users`, { cache: "no-store" });
+  const res = await fetch(`https://haster-gym-server.onrender.com/users`, {
+    cache: "no-store",
+  });
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
@@ -19,6 +23,7 @@ async function fetchMembers(): Promise<UserData[]> {
 
 export default function Members() {
   const [searchText, setSearchText] = useState<string>("");
+  const { themeClasses } = useTheme();
 
   const {
     data: members,
@@ -61,11 +66,17 @@ export default function Members() {
   });
 
   return (
-    <div className="w-full bg-gray-100 p-5 min-h-screen flex flex-col">
-      <div className="w-full bg-white p-3 rounded-lg shadow-lg flex flex-col flex-grow">
-        <div className="bg-white rounded-lg flex-shrink-0 sticky top-0 z-10">
+    <div
+      className={`w-full ${themeClasses.background} py-5 pr-5 min-h-screen flex flex-col`}
+    >
+      <div
+        className={`w-full ${themeClasses.card} p-3 rounded-2xl flex flex-col flex-grow`}
+      >
+        <div
+          className={`${themeClasses.card} rounded-lg flex-shrink-0 sticky top-0 z-10`}
+        >
           <div className="p-4 flex justify-between">
-            <h1 className="font-semibold">Members</h1>
+            <h1 className={`font-semibold ${themeClasses.text}`}>Members</h1>
             <div className="relative">
               <input
                 type="text"
@@ -80,6 +91,9 @@ export default function Members() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {members.length == 0 && (
+              <MemberPlaceholder />
+          )}
           {sortedMembers.map((member: UserData) => {
             return member.designation == "Member" ? (
               <MemberDetailsCard member={member} key={member.id} />

@@ -12,13 +12,16 @@ import Pagination from "./ui/pagination";
 import TextareaForm from "./ui/textareaForm";
 import SubscriptionExpiryRow from "./SubscriptionExpiryRow";
 import { toast } from "sonner";
+import { useTheme } from "@/context/ThemeContext";
+import Image from "next/image";
 
 export default function MemberSheetTable({ members }: { members: UserData[] }) {
   const [page, setPage] = useState(1);
   const [editChallengeId, setEditChallengeId] = useState(null);
   const [display, setDisplay] = useState<boolean>(false);
   const [enableInput, setEnableInput] = useState<boolean>(false);
-  const form = useRef<null>(null);
+  const { darkTheme } = useTheme();
+  const form = useRef(null);
 
   const {
     register,
@@ -72,8 +75,12 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
   return (
     <>
       <form ref={form} onSubmit={handleSubmit(handleEmail)}>
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400s">
-          <thead className="text-xs text-gray-400 bg-gray-50">
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead
+            className={`text-xs text-gray-400 ${
+              darkTheme ? "bg-[#353935]" : "bg-gray-50"
+            }`}
+          >
             <tr>
               <th scope="col" className="px-5 py-3 font-normal">
                 #
@@ -95,32 +102,49 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
               </th>
             </tr>
           </thead>
+
           <tbody>
             {filteredMembers
               .slice(page * 8 - 8, page * 8)
               .map((member, index) => (
                 <tr
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  className={`${
+                    darkTheme ? "bg-[#353935]" : "bg-white"
+                  } border-b dark:bg-gray-800 dark:border-gray-700`}
                   key={member.id}
                 >
                   <th
                     scope="row"
-                    className="px-6 py-4 text-xs   text-black whitespace-nowrap font-normal"
+                    className={`px-6 py-4 text-xs  ${
+                      darkTheme ? "text-white" : "text-black"
+                    } whitespace-nowrap font-normal`}
                   >
                     {index + 1 + (page - 1) * 8}
                   </th>
-                  <td className="px-5 py-4 text-xs font-normal text-black">
+                  <td
+                    className={`px-5 py-4 text-xs font-normal ${
+                      darkTheme ? "text-white" : "text-black"
+                    }`}
+                  >
                     {member.firstname} {member.lastname}
                   </td>
-                  <td className="px-5 py-4 text-xs font-normal text-black">
+                  <td
+                    className={`px-5 py-4 text-xs font-normal ${
+                      darkTheme ? "text-white" : "text-black"
+                    }`}
+                  >
                     {member.phone}
                   </td>
-                  <td className="px-5 py-4 text-xs font-normal text-black">
+                  <td
+                    className={`px-5 py-4 text-xs font-normal ${
+                      darkTheme ? "text-white" : "text-black"
+                    }`}
+                  >
                     {member.email}
                   </td>
-                  <td className="px-5 py-4 text-xs font-normal text-white">
+                  <td className="px-9 py-4 text-xs font-normal text-white text-center">
                     <p
-                      className={`w-full px-4 py-[3px] rounded-sm text-white ${
+                      className={`w-full px-2 py-[3px] rounded-sm text-white ${
                         member.paymentStatus === "Pending"
                           ? "bg-[#FEB621]"
                           : "bg-[#15C3FF]"
@@ -130,19 +154,12 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
                     </p>
                   </td>
 
-                  {/* <td className="px-5 py-4 text-xs font-normal text-black text-center">
-                  {member.enddate == "3 Month"
-                    ? 90 - findPassedDate(member.joindate)
-                    : member.enddate == "2 Month"
-                    ? 60 - findPassedDate(member.joindate)
-                    : member.enddate == "1 Month"
-                    ? 30 - findPassedDate(member.joindate)
-                    : null}
-                </td> */}
                   <SubscriptionExpiryRow member={member} />
 
                   <td
-                    className="px-5 py-4 text-xs font-normal text-black"
+                    className={`px-5 py-4 text-xs font-normal ${
+                      darkTheme ? "text-white" : "text-black"
+                    }`}
                     onClick={() => openEmailForm(member)}
                   >
                     <AiOutlineMail size={18} />
@@ -150,7 +167,7 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
                   {editChallengeId === member.id && (
                     <>
                       <div
-                        className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10"
+                        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10"
                         key={member.id}
                       >
                         <div className="bg-white p-5 rounded shadow-lg w-4/12">
@@ -219,14 +236,14 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
                           <div className="flex justify-end">
                             <button
                               type="button"
-                              className="text-xs text-white bg-[#F94343] rounded-md px-2 py-1 mr-2 mt-3"
+                              className="w-[106px] text-xs text-white bg-[#E94713] rounded-sm px-4 py-2 mr-2 mt-3"
                               onClick={handleCancel}
                             >
                               Cancel
                             </button>
                             <button
                               type="submit"
-                              className="text-xs text-white py-1 bg-[#A75815] rounded-md px-2 mt-3"
+                              className="w-[106px] text-xs text-white py-2 bg-[#8671D4] rounded-sm px-4 mt-3"
                             >
                               Send Mail
                             </button>
@@ -239,6 +256,18 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
               ))}
           </tbody>
         </table>
+        {filteredMembers.length == 0 && (
+          <div className="w-[100%] flex flex-col justify-center items-center h-[70px]">
+              <Image
+                src="/record.png"
+                width={15}
+                height={15}
+                alt="member_record"
+              />
+            <h1 className="text-[#7C7C7C] text-sm p-1">No Records were found</h1>
+
+          </div>
+        )}
         <Pagination paginationData={members} page={page} setPage={setPage} />
       </form>
     </>

@@ -3,6 +3,7 @@
 import ProductForm from "@/components/form/ProductForm";
 import ProductTable from "@/components/ProductTable";
 import Spinner from "@/components/ui/spinner";
+import { useTheme } from "@/context/ThemeContext";
 import { createProductSchema } from "@/types/z.schema.types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -10,7 +11,9 @@ import { IoIosSearch } from "react-icons/io";
 import { RiAddLargeFill } from "react-icons/ri";
 
 async function getProductDetails(): Promise<(typeof createProductSchema)[]> {
-  const data = await fetch("https://haster-gym-server.onrender.com/products");
+  // const data = await fetch("https://haster-gym-server.onrender.com/products");
+  const data = await fetch("/api/products");
+
   if (!data.ok) {
     throw new Error("Network response was not ok");
   }
@@ -20,7 +23,7 @@ async function getProductDetails(): Promise<(typeof createProductSchema)[]> {
 export default function Product() {
   const [show, setShow] = useState<boolean>(false);
   const [value, setValue] = useState("");
-
+  const { themeClasses } = useTheme();
   const {
     data: products,
     isLoading,
@@ -29,7 +32,7 @@ export default function Product() {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 min-h-screen">
+      <div className="w-full bg-gray-100 p-3 min-h-screen flex justify-center items-center">
         <Spinner />
       </div>
     );
@@ -38,7 +41,7 @@ export default function Product() {
   if (isError || !products) {
     return <div>Error fetching member or workout plan details</div>;
   }
-  
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSearch();
@@ -53,18 +56,22 @@ export default function Product() {
   };
 
   const displayedProducts = value ? handleSearch() : products;
-  
+
   const handleProductModal = () => {
     setShow(!show);
   };
 
   return (
     <>
-      <div className="w-full p-5 bg-gray-100 min-h-screen flex flex-col">
-        <div className="w-full bg-white rounded-lg p-3 flex-grow flex flex-col">
+      <div
+        className={`w-full py-5 pr-5 ${themeClasses.background} min-h-screen flex flex-col`}
+      >
+        <div
+          className={`w-full ${themeClasses.card} rounded-2xl p-3 flex-grow flex flex-col`}
+        >
           <div className="flex-1 overflow-y-auto">
             <div className="p-4 flex justify-between">
-              <h1 className="font-semibold">Products</h1>
+              <h1 className={`font-semibold ${themeClasses.text}`}>Products</h1>
               <div className="relative">
                 <input
                   type="text"
@@ -94,7 +101,7 @@ export default function Product() {
                 <ProductForm updateSetShow={setShow} />
               </div>
             </div>
-          )}
+          )} 
           <div className="flex justify-end mt-4">
             <button
               className="bg-white text-black border border-1 text-2xl rounded-full px-3 py-3 shadow-lg"

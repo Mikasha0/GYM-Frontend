@@ -1,13 +1,12 @@
 import { createChallengesSchema } from "@/types/z.schema.types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { CiImageOn } from "react-icons/ci";
+import { toast } from "sonner";
 import { z } from "zod";
 import InputForm from "../ui/inputForm";
-import TextareaForm from "../ui/textareaForm";
 import SelectInput from "../ui/selectInput";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import TextareaForm from "../ui/textareaForm";
 
 export default function ChallengesForm({
   updateSetShow,
@@ -30,7 +29,7 @@ export default function ChallengesForm({
   ) => {
     const challengesData = data;
     try {
-      const response = await fetch("https://haster-gym-server.onrender.com/challenges", {
+      const response = await fetch("/api/challenges", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,16 +78,16 @@ export default function ChallengesForm({
       <div className="flex justify-end mt-4">
         <button
           type="submit"
-          className="px-3 py-1 bg-[#FF0000] text-white rounded-md text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-[106px] px-4 py-2 bg-[#E94713] text-white rounded-sm text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => updateSetShow(false)}
         >
           Cancel
         </button>
         <button
           type="submit"
-          className="px-3 py-1 bg-[#1400FF] text-white rounded-md text-xs disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-[120px] px-4 py-2 bg-[#8671D4] text-white rounded-sm text-xs disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Add Item
+          Add Challenge
         </button>
       </div>
     </form>

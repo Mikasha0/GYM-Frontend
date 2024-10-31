@@ -10,6 +10,7 @@ import InputForm from "./ui/inputForm";
 import Pagination from "./ui/pagination";
 import Image from "next/image";
 import { toast } from "sonner";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function ProductTable({
   products,
@@ -22,6 +23,7 @@ export default function ProductTable({
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
   const [imageName, setImageName] = useState("");
+  const { themeClasses } = useTheme();
 
   const {
     register,
@@ -35,7 +37,7 @@ export default function ProductTable({
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`https://haster-gym-server.onrender.com/products/${id}`, {
+      const response = await fetch(`/api/products/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
@@ -75,14 +77,11 @@ export default function ProductTable({
         quantity: data.quantity,
         image: imageUrl,
       };
-      const response = await fetch(
-        `https://haster-gym-server.onrender.com/products/${data.id}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(productData),
-        }
-      );
+      const response = await fetch(`/api/products/${data.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(productData),
+      });
       if (!response.ok) {
         throw new Error("Failed to update product");
       }
@@ -104,7 +103,8 @@ export default function ProductTable({
   };
 
   const handleEdit = (product: any) => {
-    setEditProductId(product.id);
+    console.log(product.$id);
+    setEditProductId(product.$id);
     setDisplay(true);
     setEnableInput(false);
     reset(product);
@@ -136,7 +136,7 @@ export default function ProductTable({
   return (
     <form onSubmit={handleSubmit(handleUpdateProduct)}>
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-400 bg-gray-50">
+        <thead className={`text-xs ${themeClasses.card}`}>
           <tr>
             <th scope="col" className="px-6 py-3 font-normal">
               #
@@ -158,16 +158,18 @@ export default function ProductTable({
         <tbody>
           {products.slice(page * 8 - 8, page * 8).map((product: any, id) => (
             <tr
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              className={`${themeClasses.card} border-b dark:bg-gray-800 dark:border-gray-700`}
               key={product.id}
             >
               <th
                 scope="row"
-                className="px-6 py-4 text-xs text-black whitespace-nowrap font-normal"
+                className={`px-6 py-4 text-xs ${themeClasses.text} whitespace-nowrap font-normal`}
               >
                 {id + 1}
               </th>
-              <td className="px-6 py-4 text-xs font-normal text-black">
+              <td
+                className={`px-6 py-4 text-xs font-normal ${themeClasses.text}`}
+              >
                 <div className="flex">
                   {product.image ? (
                     <Image
@@ -183,21 +185,25 @@ export default function ProductTable({
                   <p className="mt-1">{product.name}</p>
                 </div>
               </td>
-              <td className="px-6 py-4 text-xs font-normal text-black">
+              <td
+                className={`px-6 py-4 text-xs font-normal ${themeClasses.text}`}
+              >
                 {product.price}
               </td>
-              <td className="px-6 py-4 text-xs font-normal text-black">
+              <td
+                className={`px-6 py-4 text-xs font-normal ${themeClasses.text}`}
+              >
                 {product.quantity}
               </td>
               <td className="px-6 py-4 text-xs font-normal text-white">
                 <p
-                  className={`w-[70%] px-3 py-[3px] rounded-sm text-white ${
+                  className={`w-[100%] px-1 py-[3px] rounded-sm text-white text-center ${
                     product.quantity === 0
-                    ? "bg-[#FC4B67]"
-                    : product.quantity <= 10
-                    ? "bg-[#FEB621]"
-                    : "bg-[#15C3FF]"
-                }`}
+                      ? "bg-[#FC4B67]"
+                      : product.quantity <= 10
+                      ? "bg-[#FEB621]"
+                      : "bg-[#15C3FF]"
+                  }`}
                 >
                   {product.quantity === 0
                     ? "Sold Out"
@@ -209,7 +215,7 @@ export default function ProductTable({
               <td>
                 <CiEdit
                   size={20}
-                  className="text-black cursor-pointer"
+                  className="${themeCLasses.text} cursor-pointer"
                   onClick={() => handleEdit(product)}
                 />
               </td>
@@ -217,10 +223,10 @@ export default function ProductTable({
                 <RiDeleteBinLine
                   size={18}
                   className="text-red-500 cursor-pointer"
-                  onClick={() => handleProductDelete(product.id)}
+                  onClick={() => handleProductDelete(product.$id)}
                 />
               </td>
-              {editProductId === product.id && (
+              {editProductId === product.$id && (
                 <div className=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
                   <div className="bg-white p-5 rounded shadow-lg w-4/12">
                     <div className="flex justify-between">
@@ -299,14 +305,14 @@ export default function ProductTable({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        className="text-xs text-white bg-[#F94343] rounded-md px-2 py-1 mr-2 mt-3"
+                        className="px-4 py-2 w-[106px] text-xs text-white bg-[#F94343] rounded-sm px-2 py-1 mr-2 mt-3"
                         onClick={handleCancelEdit}
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="text-xs text-white py-1 bg-[#A75815] rounded-md px-2 mt-3"
+                        className="px-4 py-2 w-[106px] text-xs text-white py-1 bg-[#8671D4] rounded-sm px-2 mt-3"
                       >
                         Update
                       </button>
@@ -318,6 +324,15 @@ export default function ProductTable({
           ))}
         </tbody>
       </table>
+      {products.length == 0 && (
+        <>
+          <h1 className="text-center text-sm  text-[#7C7C7C] mt-3">
+            No products added
+          </h1>
+          <hr className="mt-5" />
+        </>
+      )}
+      
       <Pagination paginationData={products} page={page} setPage={setPage} />
     </form>
   );

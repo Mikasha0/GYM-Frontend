@@ -11,7 +11,9 @@ export default function GrandTotal({
   return (
     <div className="flex">
       <p>Total</p>
-      <p className="text-xs font-semibold mt-2">Rs {addOnsPrice[addOns]} + {categoryTimesSubs}</p>
+      <p className="text-xs font-semibold mt-2">
+        Rs {addOnsPrice[addOns]} + {categoryTimesSubs}
+      </p>
     </div>
   );
 }

@@ -1,25 +1,27 @@
+import { useTheme } from "@/context/ThemeContext";
 import { UserData } from "@/types/userdata.type";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { differenceInDays } from "date-fns";
 import { useEffect } from "react";
 
 const updatePaymentStatus = async (memberId: number|undefined) => {
-  const response = await fetch(`http://localhost:2000/users/${memberId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ paymentStatus: "Overdue" }),
-  });
+  // const response = await fetch(`http://localhost:2000/users/${memberId}`, {
+  //   method: "PATCH",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ paymentStatus: "Overdue" }),
+  // });
 
-  if (!response.ok) {
-    throw new Error("Failed to update payment status");
-  }
+  // if (!response.ok) {
+  //   throw new Error("Failed to update payment status");
+  // }
 
-  return response.json();
+  // return response.json();
 };
 
 export const SubscriptionExpiryRow = ({ member }: { member: UserData }) => {
+  const {darkTheme} = useTheme();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -55,7 +57,7 @@ export const SubscriptionExpiryRow = ({ member }: { member: UserData }) => {
   }, [remainingDays, member.paymentStatus, member.id, mutation]);
 
   return (
-    <td className={`px-5 py-4 text-xs font-normal text-black text-center ${member.paymentStatus =="Overdue"?"text-red-400":""}`}>
+    <td className={`px-5 py-4 text-xs font-normal ${darkTheme?'text-white':'text-black'} text-center ${member.paymentStatus =="Overdue"?"text-red-400":""}`}>
       {remainingDays}
     </td>
   );

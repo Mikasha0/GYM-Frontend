@@ -469,10 +469,9 @@ export default function RegisterUserForm() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-lg text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
+                className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-sm text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting && <Loading loadingText="Registering..." />}
-                Register
+                {isSubmitting ? <Loading loadingText="Registering..." /> :"Register"}
               </button>
             </>
           )}
@@ -481,7 +480,7 @@ export default function RegisterUserForm() {
       <div className="flex justify-end mt-2">
         <button
           type="button"
-          className="font-light mt-6 px-10 py-1 bg-black text-white rounded-lg text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
+          className="font-light mt-6 px-10 py-1 bg-black text-white rounded-sm text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={currentStep === 0}
           onClick={prev}
         >
@@ -489,7 +488,7 @@ export default function RegisterUserForm() {
         </button>
         <button
           type="button"
-          className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-lg text-sm disabled:cursor-not-allowed disabled:opacity-50"
+          className="font-light mt-6 px-10 py-1 bg-[#8671D4] text-white rounded-sm text-sm disabled:cursor-not-allowed disabled:opacity-50"
           disabled={currentStep === steps.length - 1}
           onClick={next}
         >

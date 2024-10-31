@@ -62,7 +62,7 @@ export default function ProductForm({
     };
 
     try {
-      const response = await fetch("https://haster-gym-server.onrender.com/products", {
+      const response = await fetch("/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export default function ProductForm({
       <div className="flex justify-end mt-4">
         <button
           type="submit"
-          className="px-3 py-1 bg-[#FF0000] text-white rounded-md text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className=" w-[106px] px-4 py-2 bg-[#E94713] text-white rounded-sm text-xs mr-2 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => updateSetShow(false)}
         >
           Cancel
@@ -176,7 +176,7 @@ export default function ProductForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-3 py-1 bg-[#1400FF] text-white rounded-md text-xs disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-[106px] px-4 py-2 bg-[#8671D4] text-white rounded-sm text-xs disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isSubmitting ? <Loading loadingText="Adding..." /> : "Add Item"}
         </button>

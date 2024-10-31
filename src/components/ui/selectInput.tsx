@@ -30,7 +30,7 @@ export default function SelectInput({
         {required && <span className="text-red-500"> *</span>}
       </label>
       <select
-        className={`w-full border border-gray-400 px-3 py-[6px] mt-2 text-sm text-black rounded-lg ${inputClassName}`}
+        className={`w-full border border-gray-400 px-3 py-[6px] mt-2 text-sm text-black rounded-md ${inputClassName}`}
         defaultValue={defaultValue}
         {...register(name, registrationOption)}
         disabled={enable}

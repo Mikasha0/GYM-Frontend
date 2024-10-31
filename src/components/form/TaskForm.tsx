@@ -24,7 +24,7 @@ export default function TaskForm({updatePopup}:{updatePopup:React.Dispatch<React
   const createTask = async (data: z.infer<typeof createTaskSchema>) => {
     const taskData = { ...data, status: "incomplete" };
     try {
-      const response = await fetch("https://haster-gym-server.onrender.com/task", {
+      const response = await fetch("/api/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export default function TaskForm({updatePopup}:{updatePopup:React.Dispatch<React
       <div className="flex items-center justify-between">
         <button
           type="submit"
-          className="font-light px-10 py-1 bg-black text-white rounded-lg text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
+          className="font-light px-4 py-2 text-white rounded-sm text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50 bg-[#8671D4]"
         >
           Create Task
         </button>

@@ -1,3 +1,4 @@
+import { useTheme } from "@/context/ThemeContext";
 import { UserData } from "@/types/userdata.type";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import { useState } from "react";
 
 export default function Member({ member }: { member: UserData[] }) {
   const [joinedMembers, setJoinedMembers] = useState<boolean>(false);
+  const { darkTheme } = useTheme();
   const showJoinedMembers = () => {
     setJoinedMembers(!joinedMembers);
   };
@@ -12,30 +14,56 @@ export default function Member({ member }: { member: UserData[] }) {
     setJoinedMembers(!joinedMembers);
   };
 
-  const memberOnly = member.filter((mem)=>mem.designation =="Member")
+  const memberOnly = member.filter((mem) => mem.designation == "Member");
   return (
     <>
-      <h1 className="font-semibold text-sm">Members</h1>
+      <h1
+        className={`font-semibold text-sm ${
+          darkTheme ? "text-white" : "text-balck"
+        }`}
+      >
+        Members
+      </h1>
+      {memberOnly.length == 0 && (
+        <h1 className="w-full text-sm text-[#7C7C7C] pt-5">
+          No members available
+        </h1>
+      )}
       <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
         {memberOnly.slice(0, 3).map((member_image) => (
           <Image
             src={member_image.profile}
             key={member_image.id}
-            className="rounded-full mt-5"
-            width={40}
-            height={40}
+            className="rounded-full mt-2"
+            width={35}
+            height={35}
             alt="profile-img"
           />
         ))}
-        {memberOnly.length > 3 &&  (
-          <Link href={'dashboard/members'} className="mt-8">
-          <span className="text-xs text-black font-semibold hover:text-red-400">
-            +{memberOnly.length - 3} more
-          </span>
+        {memberOnly.length > 3 && (
+          <Link href={"dashboard/members"} className="mt-4">
+            <span
+              className={`text-xs ${
+                darkTheme ? "text-white" : "text-black"
+              } font-semibold hover:text-red-400`}
+            >
+              +{memberOnly.length - 3} more
+            </span>
           </Link>
         )}
       </div>
-      <h1 className="font-semibold text-sm mt-5">Recently Joined</h1>
+      <h1
+        className={`font-semibold text-sm mt-3 ${
+          darkTheme ? "text-white" : "text-balck"
+        }`}
+      >
+        Recently Joined
+      </h1>
+      {memberOnly.length == 0 && (
+        <h1 className="w-full text-sm text-[#7C7C7C] pt-5">
+          No recent joiner available
+        </h1>
+      )}
       <div className="relative grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
         {memberOnly
           .slice(-3)
@@ -44,15 +72,17 @@ export default function Member({ member }: { member: UserData[] }) {
             <Image
               src={member_image.profile}
               key={member_image.id}
-              className="rounded-full mt-5"
-              width={40}
-              height={40}
+              className="rounded-full mt-2"
+              width={35}
+              height={35}
               alt="profile-img"
             />
           ))}
         {memberOnly.length > 3 && (
           <span
-            className={`text-xs text-black font-semibold mt-8 cursor-pointer hover:text-red-400 ${
+            className={`text-xs ${
+              darkTheme ? "text-white" : "text-black"
+            } font-semibold mt-4 cursor-pointer hover:text-red-400 ${
               joinedMembers ? "text-red-400" : ""
             }`}
             onClick={showJoinedMembers}

@@ -1,47 +1,39 @@
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-
-// export const fetchTime = async () => {
-//   const response = await fetch("https://corsproxy.io/?https://worldtimeapi.org/api/ip");
-//   if (!response.ok) {
-//     throw new Error("Failed to fetch time");
-//   }
-//   return response.json();
-// };
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useTheme } from "@/context/ThemeContext";
 
 const Greeting = () => {
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["greeting"],
-  //   queryFn: fetchTime,
-  // });
+  const [greeting, setGreeting] = useState("");
+  const [icon, setIcon] = useState("/sun.png");
+  const { darkTheme } = useTheme();
 
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>Error fetching time</div>;
+  useEffect(() => {
+    const currentHour = new Date().getHours();
 
-  // const currentHour = new Date(data.datetime).getHours();
+    if (currentHour < 12) {
+      setGreeting("Good Morning");
+      setIcon("/sun.png");
+    } else if (currentHour >= 12 && currentHour < 18) {
+      setGreeting("Good Afternoon");
+      setIcon("/sunset.png");
+    } else {
+      setGreeting("Good Evening");
+      setIcon("/moon.png");
+    }
+  }, []);
 
-  // let greeting;
-  // if (currentHour < 12) {
-  //   greeting = "Good Morning 🌞";
-  // } else if (currentHour < 18) {
-  //   greeting = "Good Afternoon 👋🌞";
-  // } else {
-  //   greeting = "Good Evening 🌛";
-  // }
-  var today = new Date();
-  var curHr = today.getHours();
-  let greeting;
-  if (curHr < 12) {
-    greeting = "Good Morning 🌞";
-  } else if (curHr < 18) {
-    greeting = "Good Afternoon 👋🌞";
-  } else {
-    greeting = "Good Evening 🌛";
-  }
-  console.log(greeting);
   return (
-    <div>
-      <h1>{greeting} , Aniket</h1>
+    <div className="flex">
+      <h1 className={`flex ${darkTheme ? "text-white" : "text-black"}`}>
+        {greeting}, Aniket
+        <Image
+          src={icon}
+          width={24}
+          height={24}
+          alt={greeting}
+          style={{ marginLeft: "8px" }}
+        />
+      </h1>
     </div>
   );
 };

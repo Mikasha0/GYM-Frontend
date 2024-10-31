@@ -1,14 +1,23 @@
 import { z, ZodType } from "zod";
 import { LoginData } from "./logindata.type";
+import { BsFullscreenExit } from "react-icons/bs";
 
 // Login Schema
 export const loginSchema: ZodType<LoginData> = z.object({
-  username: z
+  email: z
     .string()
-    .min(2, { message: "Username must be at least 2 characters." }),
+    .email({ message: "Invalid email" })
+    .min(2, { message: "Email must be at least 2 characters." }),
   password: z
     .string()
-    .min(2, { message: "Password must be at least 2 characters." }),
+    .min(2, { message: "Password must be at least 2 characters." })
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{2,}$/,
+      {
+        message:
+          "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.",
+      }
+    ),
 });
 
 const validateDateOfBirth = (date: Date) => {
@@ -24,6 +33,7 @@ export const new_gender = ["Inclusive", "Male", "Female", "Other"];
 export const designation = ["Member", "Trial-Member"];
 export const category = ["Gym", "Cardio", "Gym + Cardio"];
 export const paymentMethod = ["Cash", "Esewa", "Khalti"];
+export const role = ["Admin", "Receptionist", "Trainer"];
 export const convertToEnum = (data: string[], name: string) => {
   if (data.length === 0) {
     throw new Error("Array cannot be empty");
@@ -271,3 +281,29 @@ export const createUserEmailSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   message: z.string().min(1, "Email Message is required"),
 });
+
+export const createAdminSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string().regex(/^9\d{9}$/, {
+    message:
+      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+  }),
+  role: convertToEnum(role, "role"),
+});
+
+export const RegisterSchema = z.object({
+  status: z.enum(["startingOut", "alreadyOnInstagram"], {
+    required_error: "Please select one option",
+  }),
+  gymName: z
+    .string()
+    .min(1, "Gym name is required")
+    .min(2, "Gym name must be at least 2 characters"),
+  fullName: z.string().min(1, "Full Name is a required field."),
+  phoneNumber: z.string().regex(/^9\d{9}$/, {
+    message:
+      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+  }),
+});
+
