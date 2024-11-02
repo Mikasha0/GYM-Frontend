@@ -26,6 +26,9 @@ export default function LoginForm() {
 
   const submitData = async (data: LoginData) => {
     console.log(data, "login form");
+    if(data.email == "anikettamrakar0@gmail.com" && data.password=="123@Dharan"){
+      router.push('/dashboard')
+    }
   };
 
   // const handleLogout = async () => {
@@ -47,6 +50,7 @@ export default function LoginForm() {
         <input
           type="text"
           placeholder="Email address*"
+          value="anikettamrakar0@gmail.com"
           {...register("email")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />
@@ -60,6 +64,7 @@ export default function LoginForm() {
         <input
           type="password"
           placeholder="Password*"
+          value="123@Dharan"
           {...register("password")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />
