@@ -32,8 +32,10 @@ export default function Product() {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 min-h-screen flex justify-center items-center">
-        <Spinner />
+      <div className="w-full bg-gray-100 py-5 pr-5 h-screen flex justify-center items-center">
+        <div className="w-full bg-white rounded-2xl h-full flex justify-center items-center ">
+          <Spinner />
+        </div>
       </div>
     );
   }
@@ -64,10 +66,10 @@ export default function Product() {
   return (
     <>
       <div
-        className={`w-full py-5 pr-5 ${themeClasses.background} min-h-screen flex flex-col`}
+        className={`w-full py-5 pr-5 ${themeClasses.background} h-screen flex flex-col`}
       >
         <div
-          className={`w-full ${themeClasses.card} rounded-2xl p-3 flex-grow flex flex-col`}
+          className={`w-full ${themeClasses.card} rounded-2xl p-3 h-full flex flex-col`}
         >
           <div className="flex-1 overflow-y-auto">
             <div className="p-4 flex justify-between">
@@ -101,7 +103,7 @@ export default function Product() {
                 <ProductForm updateSetShow={setShow} />
               </div>
             </div>
-          )} 
+          )}
           <div className="flex justify-end mt-4">
             <button
               className="bg-white text-black border border-1 text-2xl rounded-full px-3 py-3 shadow-lg"

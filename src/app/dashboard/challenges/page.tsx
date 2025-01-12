@@ -41,8 +41,10 @@ export default function Challenges() {
 
   if (challengesLoading || membersLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 min-h-screen flex justify-center items-center">
-        <Spinner />
+      <div className="w-full bg-gray-100 py-5 pr-5 h-screen flex justify-center items-center">
+        <div className="w-full bg-white rounded-2xl h-full flex justify-center items-center ">
+          <Spinner />
+        </div>
       </div>
     );
   }

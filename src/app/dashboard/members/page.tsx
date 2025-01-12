@@ -12,13 +12,17 @@ import { useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 
 async function fetchMembers(): Promise<UserData[]> {
-  const res = await fetch(`https://haster-gym-server.onrender.com/users`, {
+  const res = await fetch(`/api/createUser`, {
     cache: "no-store",
   });
+
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
-  return res.json();
+
+  const data = await res.json();
+  console.log(data.users);
+  return data.users;
 }
 
 export default function Members() {
@@ -34,10 +38,14 @@ export default function Members() {
     queryFn: fetchMembers,
   });
 
+  console.log(members);
+
   if (isLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 min-h-screen flex justify-center items-center">
-        <Spinner />
+      <div className="w-full bg-gray-100 py-5 pr-5 h-screen flex justify-center items-center">
+        <div className="w-full bg-white rounded-2xl h-full flex justify-center items-center ">
+          <Spinner />
+        </div>
       </div>
     );
   }
@@ -91,9 +99,7 @@ export default function Members() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto px-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {members.length == 0 && (
-              <MemberPlaceholder />
-          )}
+          {members.length == 0 && <MemberPlaceholder />}
           {sortedMembers.map((member: UserData) => {
             return member.designation == "Member" ? (
               <MemberDetailsCard member={member} key={member.id} />

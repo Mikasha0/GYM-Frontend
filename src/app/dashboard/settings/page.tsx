@@ -6,7 +6,7 @@ export default function Settings() {
   const { darkTheme, toggleTheme, themeClasses } = useTheme();
 
   return (
-    <div className={`w-full h-full p-5 ${themeClasses.background}`}>
+    <div className={`w-full h-full py-5 pr-5 ${themeClasses.background}`}>
       <div className={`w-full h-full p-3 rounded-2xl shadow-lg ${themeClasses.card}`}>
         <div className="p-4">
           <h1 className={`font-semibold ${themeClasses.text}`}>Settings</h1>

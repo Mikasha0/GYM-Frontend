@@ -140,7 +140,7 @@ export default function AdminTable({
           </tr>
         </thead>
         <tbody>
-          {products.slice(page * 8 - 8, page * 8).map((product: any, id) => (
+          {products.slice(page * 6 - 6, page * 6).map((product: any, id) => (
             <tr
               className={`${themeClasses.card} border-b dark:bg-gray-800 dark:border-gray-700`}
               key={product.id}

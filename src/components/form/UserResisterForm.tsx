@@ -1,5 +1,5 @@
 "use client";
-import { createUserSchema } from "@/types/z.schema.types";
+import { createUserSchema, UserSchema } from "@/types/z.schema.types";
 import { steps } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
@@ -28,18 +28,18 @@ export const Subscription: { [key: string]: number } = {
   "3 Month": 3,
 };
 
-export default function RegisterUserForm() {
+export default function UserResisterForm() {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
   const [designation, setDesignation] = useState<string>("Member");
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
   const [category, setCategory] = useState("Gym");
   const [subscription, setSubscription] = useState("1 Month");
-  const [users, setUsers] = useState<(typeof createUserSchema)[]>([]);
+  const [users, setUsers] = useState<(typeof UserSchema)[]>([]);
   const delta = currentStep - previousStep;
   const generator = new AvatarGenerator();
   const ramdom_avatar = generator.generateRandomAvatar();
-  console.log(designation)
+  console.log(designation);
   const AddOn = selectedAddOns.reduce(
     (total, addOn) => total + addOnsPrice[addOn],
     0
@@ -52,8 +52,8 @@ export default function RegisterUserForm() {
     handleSubmit,
     trigger,
     formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof createUserSchema>>({
-    resolver: zodResolver(createUserSchema),
+  } = useForm<z.infer<typeof UserSchema>>({
+    resolver: zodResolver(UserSchema),
     mode: "onChange",
   });
 
@@ -65,19 +65,16 @@ export default function RegisterUserForm() {
     );
   };
 
-  const registerUser = async (data: z.infer<typeof createUserSchema>) => {
+  const registerUser = async (data: z.infer<typeof UserSchema>) => {
     console.log(data);
     const registerUserData = {
       ...data,
-      addOns: selectedAddOns,
       id: uuidv4(),
-      streak: 0,
-      lastattendance: null,
       profile: ramdom_avatar,
     };
-
+    console.log(registerUserData);
     try {
-      const response = await fetch("/api/createUser", {
+      const response = await fetch("/api/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -232,9 +229,20 @@ export default function RegisterUserForm() {
                   errors={errors}
                 />
               </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="font-light mt-6 px-10 py-1 bg-[#A75815] text-white rounded-sm text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSubmitting ? (
+                  <Loading loadingText="Registering..." />
+                ) : (
+                  "Register"
+                )}
+              </button>
             </motion.div>
           )}
-          {currentStep === 1 && (
+          {/* {currentStep === 1 && (
             <motion.div
               initial={{ x: delta >= 0 ? "50%" : "-50%", opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -316,8 +324,8 @@ export default function RegisterUserForm() {
                 />
               </div>
             </motion.div>
-          )}
-          {currentStep === 2 && (
+          )} */}
+          {/* {currentStep === 2 && (
             <>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
                 <SelectInput
@@ -361,9 +369,9 @@ export default function RegisterUserForm() {
                     options={["1 Month", "2 Month", "3 Month"]}
                     onChange={(e) => setSubscription(e.target.value)}
                   />
-                )}
+                )} */}
 
-                {/* <InputForm
+          {/* <InputForm
                   labelName="End Date"
                   inputType="date"
                   register={register}
@@ -371,7 +379,7 @@ export default function RegisterUserForm() {
                   name="enddate"
                   errors={errors}
                 /> */}
-                <SelectInput
+          {/* <SelectInput
                   labelName="Payment Status"
                   errors={errors}
                   register={register}
@@ -474,10 +482,10 @@ export default function RegisterUserForm() {
                 {isSubmitting ? <Loading loadingText="Registering..." /> :"Register"}
               </button>
             </>
-          )}
+          )} */}
         </div>
       </form>
-      <div className="flex justify-end mt-2">
+      {/* <div className="flex justify-end mt-2">
         <button
           type="button"
           className="font-light mt-6 px-10 py-1 bg-black text-white rounded-sm text-sm mr-3 disabled:cursor-not-allowed disabled:opacity-50"
@@ -494,7 +502,7 @@ export default function RegisterUserForm() {
         >
           Next
         </button>
-      </div>
+      </div> */}
     </>
   );
 }

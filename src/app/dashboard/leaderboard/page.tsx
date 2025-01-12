@@ -12,8 +12,10 @@ export default function Leaderboard() {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3 h-full">
-        <Spinner />
+      <div className="w-full bg-gray-100 py-5 pr-5 h-screen flex justify-center items-center">
+        <div className="w-full bg-white rounded-2xl h-full flex justify-center items-center ">
+          <Spinner />
+        </div>
       </div>
     );
   }

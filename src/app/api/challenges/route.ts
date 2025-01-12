@@ -44,7 +44,7 @@ async function fetchChallenge() {
     return response.documents;
   } catch (error) {
     console.error("Error fetching challenge");
-    throw new Error("Failed to fetch chaullenge");
+    throw new Error("Failed to fetch challenge");
   }
 }
 

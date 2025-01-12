@@ -10,7 +10,7 @@ export default function Pagination({
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
 }) {
-  const itemsPerPage = 8;
+  const itemsPerPage = 6;
   const totalPages = Math.ceil(paginationData.length / itemsPerPage);
 
   const selectPageHandler = (selectedPage: number) => {

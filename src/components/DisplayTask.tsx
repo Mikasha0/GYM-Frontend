@@ -51,7 +51,6 @@ export default function DisplayTask() {
     isError,
   } = useQuery({ queryKey: ["task"], queryFn: fetchTaskData });
 
-
   const queryClient = useQueryClient();
 
   const deleteTaskMutation = useMutation({
@@ -74,7 +73,7 @@ export default function DisplayTask() {
 
   if (isLoading) {
     return (
-      <div className="w-full bg-gray-100 p-3">
+      <div className="w-full bg-gray-100 p-3 flex justify-center items-center">
         <Spinner />
       </div>
     );
@@ -95,9 +94,7 @@ export default function DisplayTask() {
     <div className="mt-1">
       {tasks.length == 0 && (
         <div className="bg-[#F7F7F7] h-[60px] w-full rounded-lg flex items-center justify-center">
-          <h2 className="text-sm text-center text-[#7C7C7C]">
-            No task added
-          </h2>
+          <h2 className="text-sm text-center text-[#7C7C7C]">No task added</h2>
         </div>
       )}
       <AnimatePresence>

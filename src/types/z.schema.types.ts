@@ -181,13 +181,19 @@ export const updateUserDetailsSchema = z.object({
   address: z
     .string()
     .min(2, { message: "Address must be at least 2 characters." }),
-  emergencyContactNumber: z.string().regex(/^9\d{9}$/, {
-    message:
-      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
-  }),
+  emergencyContactNumber: z
+    .string()
+    .regex(/^9\d{9}$/, {
+      message:
+        "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+    })
+    .optional()
+    .or(z.literal("")),
   emergencyContactName: z
     .string()
-    .min(2, { message: "Contact name must be at least 2 characters." }),
+    .min(2, { message: "Contact name must be at least 2 characters." })
+    .optional()
+    .or(z.literal("")),
   dateOfBirth: dateOfBirthSchema,
   gender: convertToEnum(gender, "gender"),
   designation: convertToEnum(designation, "designation"),
@@ -307,3 +313,40 @@ export const RegisterSchema = z.object({
   }),
 });
 
+export const UserSchema = z.object({
+  firstname: z
+    .string()
+    .min(2, { message: "First name must be at least 2 characters." }),
+  middlename: z
+    .string()
+    // .min(2, { message: "Middle name must be at least 2 characters." })
+    .nullable()
+    .optional(),
+  lastname: z
+    .string()
+    .min(2, { message: "Last name must be at least 2 characters." }),
+  email: z.string().email({ message: "Invalid email address." }),
+  phone: z.string().regex(/^9\d{9}$/, {
+    message:
+      "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+  }),
+  address: z
+    .string()
+    .min(2, { message: "Address must be at least 2 characters." }),
+  emergencyContactNumber: z
+    .string()
+    .regex(/^9\d{9}$/, {
+      message:
+        "Phone number must be a valid 10-digit Nepalese number starting with 9.",
+    })
+    .optional()
+    .or(z.literal("")),
+  emergencyContactName: z
+    .string()
+    .min(2, { message: "Contact name must be at least 2 characters." })
+    .optional()
+    .or(z.literal("")),
+  dateOfBirth: dateOfBirthSchema,
+  gender: convertToEnum(gender, "gender"),
+  designation: convertToEnum(designation, "designation"),
+});

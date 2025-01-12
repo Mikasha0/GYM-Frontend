@@ -15,6 +15,9 @@ import { LuShoppingBag } from "react-icons/lu";
 import { MdOutlineLeaderboard } from "react-icons/md";
 import { PiBookOpenLight } from "react-icons/pi";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { GiArchiveRegister } from "react-icons/gi";
+import { FiBarChart2 } from "react-icons/fi";
+import UserIcon from "../UserIcon";
 
 export function Sidebar() {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -40,9 +43,9 @@ export function Sidebar() {
   };
 
   return (
-    <div className={`p-5 h-screen ${
-      darkTheme ? "bg-[#353935]" : "bg-gray-100"
-    }`}>
+    <div
+      className={`p-5 h-screen ${darkTheme ? "bg-[#353935]" : "bg-gray-100"}`}
+    >
       <div
         className={`${
           toggle ? "w-[90px]" : "w-[210px]"
@@ -51,7 +54,7 @@ export function Sidebar() {
         }`}
       >
         <div>
-          <div className="flex justify-between items-center mb-3">
+          <div className="flex justify-between items-center mb-6">
             {!toggle && (
               <Link href="/dashboard">
                 <h1
@@ -74,57 +77,64 @@ export function Sidebar() {
           <Link href="/dashboard">
             <p className={getLinkClasses("/dashboard")}>
               <GrHomeRounded className="icon" size={16} />
-              {!toggle && <span className="ml-3">Home</span>}
+              {!toggle && <span className="ml-3 font-medium">Home</span>}
             </p>
           </Link>
           <Link href="/dashboard/admin">
             <p className={getLinkClasses("/dashboard/admin")}>
+            {/* <UserIcon/> */}
               <IoPersonOutline className="icon" size={18} />
-              {!toggle && <span className="ml-3">Admin</span>}
+              {!toggle && <span className="ml-3 font-medium">Admin</span>}
             </p>
           </Link>
           <Link href="/dashboard/createUser">
             <p className={getLinkClasses("/dashboard/createUser")}>
               <PiBookOpenLight className="icon" size={20} />
-              {!toggle && <span className="ml-3">Registration</span>}
+              {!toggle && <span className="ml-3 font-medium">Registration</span>}
             </p>
           </Link>
           <Link href="/dashboard/members">
             <p className={getLinkClasses("/dashboard/members")}>
               <IoPersonOutline className="icon" size={18} />
-              {!toggle && <span className="ml-3">Members</span>}
+              {!toggle && <span className="ml-3 font-medium">Members</span>}
             </p>
           </Link>
           <Link href="/dashboard/products">
             <p className={getLinkClasses("/dashboard/products")}>
-              <LuShoppingBag className="icon" size={18} />
-              {!toggle && <span className="ml-3">Products</span>}
+              <LuShoppingBag className="icon" size={19} />
+              {!toggle && <span className="ml-3 font-medium">Products</span>}
             </p>
           </Link>
           <Link href="/dashboard/challenges">
             <p className={getLinkClasses("/dashboard/challenges")}>
               <IoBookOutline className="icon" size={18} />
-              {!toggle && <span className="ml-3">Challenges</span>}
+              {!toggle && <span className="ml-3 font-medium">Challenges</span>}
             </p>
           </Link>
           <Link href="/dashboard/leaderboard">
             <p className={getLinkClasses("/dashboard/leaderboard")}>
-              <MdOutlineLeaderboard className="icon" size={18} />
-              {!toggle && <span className="ml-3">Leaderboard</span>}
+              <FiBarChart2 className="icon" size={18} />
+              {!toggle && <span className="ml-3 font-medium">Leaderboard</span>}
             </p>
           </Link>
-          <Link href="/dashboard/shop">
+          {/* <Link href="/dashboard/user">
+            <p className={getLinkClasses("/dashboard/user")}>
+              <GiArchiveRegister className="icon" size={18} />
+              {!toggle && <span className="ml-3 font-medium">User Creation</span>}
+            </p>
+          </Link> */}
+          {/* <Link href="/dashboard/shop">
             <p className={getLinkClasses("/dashboard/shop")}>
               <IoCartOutline className="icon" size={18} />
-              {!toggle && <span className="ml-3">Shop</span>}
+              {!toggle && <span className="ml-3 font-medium">Shop</span>}
             </p>
-          </Link>
+          </Link> */}
         </div>
         <div className="mt-auto">
           <Link href="/dashboard/settings">
             <p className={getLinkClasses("/dashboard/settings")}>
               <IoSettingsOutline className="icon" size={18} />
-              {!toggle && <span className="ml-3">Setting</span>}
+              {!toggle && <span className="ml-3 font-medium">Setting</span>}
             </p>
           </Link>
         </div>

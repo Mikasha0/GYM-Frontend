@@ -105,7 +105,7 @@ export default function MemberSheetTable({ members }: { members: UserData[] }) {
 
           <tbody>
             {filteredMembers
-              .slice(page * 8 - 8, page * 8)
+              .slice(page * 6 - 6, page * 6)
               .map((member, index) => (
                 <tr
                   className={`${
