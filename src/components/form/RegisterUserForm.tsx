@@ -391,7 +391,7 @@ export default function RegisterUserForm() {
                   value="Shower"
                   onClick={() => handleAddOnClick("Shower")}
                 >
-                  Shower{" "}
+                  Shower
                   {selectedAddOns.includes("Shower") ? (
                     <FaCheck className="ml-2 mt-[2px]" />
                   ) : (

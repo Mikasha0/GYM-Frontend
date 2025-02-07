@@ -58,7 +58,7 @@ export default function LoginForm() {
         <input
           type="text"
           placeholder="Email address*"
-          // value="anikettamrakar0@gmail.com"
+          value="anikettamrakar0@gmail.com"
           {...register("email")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />
@@ -72,7 +72,7 @@ export default function LoginForm() {
         <input
           type="password"
           placeholder="Password*"
-          // value="123@Dharan"
+          value="123@Dharan"
           {...register("password")}
           className="w-[70%] border border-gray-400 px-3 py-2 mt-2 text-sm rounded-lg"
         />

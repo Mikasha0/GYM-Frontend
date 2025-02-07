@@ -90,7 +90,7 @@ export const MemberLineChart = ({ member }: { member: UserData[] }) => {
   console.log(member.length);
 
   return (
-    <div className="h-[90%] flex flex-col justify-between">
+    <div className="h-[80%] flex flex-col justify-between">
       {member.length == 0 ? (
         <>
           <div className="flex">
@@ -126,7 +126,7 @@ export const MemberLineChart = ({ member }: { member: UserData[] }) => {
               Total Members: {member.length}
             </p>
           </div>
-          <div className="flex flex-col justify-end h-full pb-6">
+          <div className="flex flex-col justify-end h-full pb-6 pt-4">
             <Line data={data} options={options} />
             <span
               className={`text-center ${
